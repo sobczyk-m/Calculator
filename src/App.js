@@ -1,4 +1,9 @@
+import {useState} from "react"
+
 function App() {
+
+    const [currentFormula, setCurrentFormula] = useState("")
+    const [previousFormula, setPreviousFormula] = useState("")
 
     const createButton = () => {
 
@@ -12,12 +17,131 @@ function App() {
             {"name": "parenthesis", "sign": "( )"}, {"name": "equals", "sign": "="},
         ]
 
-        return buttons.map(button => <div id={button.name} className={"button"}>{button.sign}</div>)
+        const onButtonClick = (e) => {
+            switch (e) {
+                case "C":
+                    setCurrentFormula("")
+                    setPreviousFormula("")
+                    break
+                case "del":
+                    setCurrentFormula(prevState => prevState.slice(0, prevState.length - 1))
+                    setPreviousFormula(prevState => prevState.slice(0, prevState.length - 1))
+                    break
+                case "0":
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                    setCurrentFormula(prevState => prevState + e)
+                    setPreviousFormula(prevState => prevState + e)
+                    break
+                case "X":
+                    setCurrentFormula(prevState => {
+                        switch (prevState.charAt(prevState.length - 1)) {
+                            case "/":
+                            case "-":
+                            case "+":
+                            case "%":
+                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + "*")
+                                return prevState.slice(0, prevState.length - 1) + "*"
+                            case "*":
+                                setPreviousFormula(prevState)
+                                return prevState
+                            default:
+                                setPreviousFormula(prevState + "*")
+                                return prevState + "*"
+                        }
+                    })
+                    break
+                case "-":
+                    setCurrentFormula(prevState => {
+                        switch (prevState.charAt(prevState.length - 1)) {
+                            case "/":
+                            case "*":
+                            case "+":
+                            case "%":
+                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
+                                return prevState.slice(0, prevState.length - 1) + e
+                            case "-":
+                                setPreviousFormula(prevState)
+                                return prevState
+                            default:
+                                setPreviousFormula(prevState + e)
+                                return prevState + e
+                        }
+                    })
+                    break
+                case "/":
+                    setCurrentFormula(prevState => {
+                        switch (prevState.charAt(prevState.length - 1)) {
+                            case "-":
+                            case "*":
+                            case "+":
+                            case "%":
+                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
+                                return prevState.slice(0, prevState.length - 1) + e
+                            case "/":
+                                setPreviousFormula(prevState)
+                                return prevState
+                            default:
+                                setPreviousFormula(prevState + e)
+                                return prevState + e
+                        }
+                    })
+                    break
+                case "+":
+                    setCurrentFormula(prevState => {
+                        switch (prevState.charAt(prevState.length - 1)) {
+                            case "/":
+                            case "*":
+                            case "-":
+                            case "%":
+                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
+                                return prevState.slice(0, prevState.length - 1) + e
+                            case "+":
+                                setPreviousFormula(prevState)
+                                return prevState
+                            default:
+                                setPreviousFormula(prevState + e)
+                                return prevState + e
+                        }
+                    })
+                    break
+                case "%":
+                    setCurrentFormula(prevState => {
+                        switch (prevState.charAt(prevState.length - 1)) {
+                            case "/":
+                            case "*":
+                            case "-":
+                            case "+":
+                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
+                                return prevState.slice(0, prevState.length - 1) + e
+                            case "%":
+                                setPreviousFormula(prevState)
+                                return prevState
+                            default:
+                                setPreviousFormula(prevState + "*")
+                                return prevState + "*"
+                        }
+                    })
+                    break
+                default:
+                    break
+            }
+        }
+
+        return buttons.map(button => <div id={button.name} className={"button"}
+                                          onClick={() => onButtonClick(button.sign)}>{button.sign}</div>)
     }
 
     return (
         <div id={"calculator"}>
-            <div id={"display"}></div>
+            <div id={"display"}><p>{currentFormula}</p></div>
             <div id={"buttons-container"}>
                 {createButton()}
             </div>
