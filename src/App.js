@@ -22,21 +22,20 @@ function App() {
                     "+": "+",
                     "-": "-"
                 }
-                delete allOperators[sign]
 
                 if (activeOperator === "%") {
                     if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
-                        setExpression(prevState + allOperators[activeOperator])
+                        setExpression(prevState => prevState + allOperators[activeOperator])
                         return (prevState + activeOperator)
                     } else return prevState
                 } else if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
-                    setExpression(prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
+                    setExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
                     return (prevState.slice(0, prevState.length - 1) + activeOperator)
                 } else if (prevState.charAt(prevState.length - 1) === activeOperator) {
-                    setExpression(prevState)
+                    setExpression(prevState => prevState)
                     return prevState
                 } else {
-                    setExpression(prevState + allOperators[activeOperator])
+                    setExpression(prevState => prevState + allOperators[activeOperator])
                     return prevState + activeOperator
                 }
             }
