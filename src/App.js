@@ -5,6 +5,37 @@ function App() {
     const [currentFormula, setCurrentFormula] = useState("")
     const [previousFormula, setPreviousFormula] = useState("")
 
+    const onOperatorClick = (sign) => {
+        let activeOperator = ""
+        if (sign === "X") {
+            activeOperator = "*"
+        } else activeOperator = sign
+
+        setCurrentFormula(prevState => {
+
+                const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                const allOperators = ["*", "/", "%", "+", "-"]
+                const inactiveOperators = allOperators.filter(operator => operator !== activeOperator)
+
+                if (activeOperator === "%") {
+                    if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                        setPreviousFormula(prevState + activeOperator)
+                        return prevState + activeOperator
+                    } else return prevState
+                } else if (inactiveOperators.includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
+                    setPreviousFormula(prevState.slice(0, prevState.length - 1) + activeOperator)
+                    return prevState.slice(0, prevState.length - 1) + activeOperator
+                } else if (prevState.charAt(prevState.length - 1) === activeOperator) {
+                    setPreviousFormula(prevState)
+                    return prevState
+                } else {
+                    setPreviousFormula(prevState + activeOperator)
+                    return prevState + activeOperator
+                }
+            }
+        )
+    }
+
     const createButton = () => {
 
         const buttons = [
@@ -41,94 +72,19 @@ function App() {
                     setPreviousFormula(prevState => prevState + e)
                     break
                 case "X":
-                    setCurrentFormula(prevState => {
-                        switch (prevState.charAt(prevState.length - 1)) {
-                            case "/":
-                            case "-":
-                            case "+":
-                            case "%":
-                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + "*")
-                                return prevState.slice(0, prevState.length - 1) + "*"
-                            case "*":
-                                setPreviousFormula(prevState)
-                                return prevState
-                            default:
-                                setPreviousFormula(prevState + "*")
-                                return prevState + "*"
-                        }
-                    })
-                    break
-                case "-":
-                    setCurrentFormula(prevState => {
-                        switch (prevState.charAt(prevState.length - 1)) {
-                            case "/":
-                            case "*":
-                            case "+":
-                            case "%":
-                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
-                                return prevState.slice(0, prevState.length - 1) + e
-                            case "-":
-                                setPreviousFormula(prevState)
-                                return prevState
-                            default:
-                                setPreviousFormula(prevState + e)
-                                return prevState + e
-                        }
-                    })
+                    onOperatorClick("X")
                     break
                 case "/":
-                    setCurrentFormula(prevState => {
-                        switch (prevState.charAt(prevState.length - 1)) {
-                            case "-":
-                            case "*":
-                            case "+":
-                            case "%":
-                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
-                                return prevState.slice(0, prevState.length - 1) + e
-                            case "/":
-                                setPreviousFormula(prevState)
-                                return prevState
-                            default:
-                                setPreviousFormula(prevState + e)
-                                return prevState + e
-                        }
-                    })
-                    break
-                case "+":
-                    setCurrentFormula(prevState => {
-                        switch (prevState.charAt(prevState.length - 1)) {
-                            case "/":
-                            case "*":
-                            case "-":
-                            case "%":
-                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
-                                return prevState.slice(0, prevState.length - 1) + e
-                            case "+":
-                                setPreviousFormula(prevState)
-                                return prevState
-                            default:
-                                setPreviousFormula(prevState + e)
-                                return prevState + e
-                        }
-                    })
+                    onOperatorClick("/")
                     break
                 case "%":
-                    setCurrentFormula(prevState => {
-                        switch (prevState.charAt(prevState.length - 1)) {
-                            case "/":
-                            case "*":
-                            case "-":
-                            case "+":
-                                setPreviousFormula(prevState.slice(0, prevState.length - 1) + e)
-                                return prevState.slice(0, prevState.length - 1) + e
-                            case "%":
-                                setPreviousFormula(prevState)
-                                return prevState
-                            default:
-                                setPreviousFormula(prevState + "*")
-                                return prevState + "*"
-                        }
-                    })
+                    onOperatorClick("%")
+                    break
+                case "+":
+                    onOperatorClick("+")
+                    break
+                case "-":
+                    onOperatorClick("-")
                     break
                 default:
                     break
