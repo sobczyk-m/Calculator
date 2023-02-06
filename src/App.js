@@ -43,6 +43,48 @@ function App() {
         )
     }
 
+    const onParenthesisClick = (target) => {
+
+        const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        const allOperators = {
+            "x": "*",
+            "/": "/",
+            "%": "/100",
+            "+": "+",
+            "-": "-"
+        }
+        const parenthesis = {
+            "(": "*(",
+            ")": ")",
+        }
+
+        switch (target.id) {
+            case "(":
+                setDisplayExpression(prevState => {
+                    if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                        setExpression(prevState => prevState + parenthesis[target.id])
+                        return prevState + target.id
+                    } else {
+                        setExpression(prevState => prevState + target.id)
+                        return prevState + target.id
+                    }
+                })
+                break
+            case ")":
+                setDisplayExpression(prevState => {
+                    if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1))) {
+                        setExpression(prevState => prevState)
+                        return prevState
+                    } else {
+                        setExpression(prevState => prevState + target.id)
+                        return prevState + target.id
+                    }
+                })
+                break
+        }
+        document.getElementById("parenthesis").innerText = "( )"
+    }
+
     const createButton = () => {
 
         const buttons = [
@@ -93,13 +135,40 @@ function App() {
                 case "-":
                     onOperatorClick("-")
                     break
+                case "( )":
+                    const leftParenthesis = document.createElement("button")
+                    const rightParenthesis = document.createElement("button")
+
+                    leftParenthesis.id = "("
+                    leftParenthesis.innerText = "("
+
+                    rightParenthesis.id = ")"
+                    rightParenthesis.innerText = ")"
+
+                    leftParenthesis.style.width = "50%"
+                    rightParenthesis.style.width = "50%"
+                    leftParenthesis.style.height = "100%"
+                    rightParenthesis.style.height = "100%"
+
+                    leftParenthesis.addEventListener("click", ev => onParenthesisClick(ev.currentTarget))
+                    rightParenthesis.addEventListener("click", ev => onParenthesisClick(ev.currentTarget))
+
+                    document.getElementById("parenthesis").innerText = ""
+                    document.getElementById("parenthesis").append(leftParenthesis)
+                    document.getElementById("parenthesis").append(rightParenthesis)
+
+                    document.getElementById("parenthesis").onmouseleave =
+                        () => {
+                            document.getElementById("parenthesis").innerText = "( )"
+                        }
+                    break
                 default:
                     break
             }
         }
 
-        return buttons.map(button => <div id={button.name} className={"button"}
-                                          onClick={() => onButtonClick(button.sign)}>{button.sign}</div>)
+        return buttons.map(button => <button id={button.name} className={"button"}
+                                             onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
     return (
