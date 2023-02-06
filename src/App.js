@@ -9,28 +9,34 @@ function App() {
     const onOperatorClick = (sign) => {
         let activeOperator = ""
         if (sign === "X") {
-            activeOperator = "*"
+            activeOperator = "x"
         } else activeOperator = sign
 
-        setExpression(prevState => {
+        setDisplayExpression(prevState => {
 
                 const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-                const allOperators = ["*", "/", "%", "+", "-"]
-                const inactiveOperators = allOperators.filter(operator => operator !== activeOperator)
+                const allOperators = {
+                    "x": "*",
+                    "/": "/",
+                    "%": "/100",
+                    "+": "+",
+                    "-": "-"
+                }
+                delete allOperators[sign]
 
                 if (activeOperator === "%") {
                     if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
-                        setDisplayExpression(prevState + activeOperator)
-                        return prevState + activeOperator
+                        setExpression(prevState + allOperators[activeOperator])
+                        return (prevState + activeOperator)
                     } else return prevState
-                } else if (inactiveOperators.includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
-                    setDisplayExpression(prevState.slice(0, prevState.length - 1) + activeOperator)
-                    return prevState.slice(0, prevState.length - 1) + activeOperator
+                } else if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
+                    setExpression(prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
+                    return (prevState.slice(0, prevState.length - 1) + activeOperator)
                 } else if (prevState.charAt(prevState.length - 1) === activeOperator) {
-                    setDisplayExpression(prevState)
+                    setExpression(prevState)
                     return prevState
                 } else {
-                    setDisplayExpression(prevState + activeOperator)
+                    setExpression(prevState + allOperators[activeOperator])
                     return prevState + activeOperator
                 }
             }
