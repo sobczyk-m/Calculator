@@ -6,43 +6,17 @@ function App() {
     const [displayExpression, setDisplayExpression] = useState("")
     const [historyExpression, setHistoryExpression] = useState([])
 
-    const onOperatorClick = (sign) => {
-        let activeOperator = ""
-        if (sign === "X") {
-            activeOperator = "x"
-        } else activeOperator = sign
+    const createButton = () => {
 
-        setDisplayExpression(prevState => {
-
-                const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-                const allOperators = {
-                    "x": "*",
-                    "/": "/",
-                    "%": "/100",
-                    "+": "+",
-                    "-": "-"
-                }
-
-                if (activeOperator === "%") {
-                    if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
-                        setExpression(prevState => prevState + allOperators[activeOperator])
-                        return (prevState + activeOperator)
-                    } else return prevState
-                } else if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
-                    setExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
-                    return (prevState.slice(0, prevState.length - 1) + activeOperator)
-                } else if (prevState.charAt(prevState.length - 1) === activeOperator ||
-                    ((prevState.charAt(prevState.length - 1) === "(") && (activeOperator === "x" || activeOperator === "/"))) {
-                    setExpression(prevState => prevState)
-                    return prevState
-                } else {
-                    setExpression(prevState => prevState + allOperators[activeOperator])
-                    return prevState + activeOperator
-                }
-            }
-        )
-    }
-    const onParenthesisClick = (target) => {
+        const buttons = [
+            {"name": "clear", "sign": "C"}, {"name": "percent", "sign": "%"}, {"name": "delete", "sign": "del"},
+            {"name": "divide", "sign": "/"}, {"name": "seven", "sign": "7"}, {"name": "eight", "sign": "8"},
+            {"name": "nine", "sign": "9"}, {"name": "multiply", "sign": "X"}, {"name": "four", "sign": "4"},
+            {"name": "five", "sign": "5"}, {"name": "six", "sign": "6"}, {"name": "subtract", "sign": "-"},
+            {"name": "one", "sign": "1"}, {"name": "two", "sign": "2"}, {"name": "three", "sign": "3"},
+            {"name": "add", "sign": "+"}, {"name": "zero", "sign": "0"}, {"name": "decimal", "sign": "."},
+            {"name": "parenthesis", "sign": "( )"}, {"name": "equals", "sign": "="},
+        ]
 
         const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         const allOperators = {
@@ -57,44 +31,65 @@ function App() {
             ")": ")",
         }
 
-        switch (target.id) {
-            case "(":
-                setDisplayExpression(prevState => {
-                    if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
-                        setExpression(prevState => prevState + parenthesis[target.id])
-                        return prevState + target.id
-                    } else {
-                        setExpression(prevState => prevState + target.id)
-                        return prevState + target.id
-                    }
-                })
-                break
-            case ")":
-                setDisplayExpression(prevState => {
-                    if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1))) {
+        const onOperatorClick = (sign) => {
+
+            let activeOperator = ""
+            if (sign === "X") {
+                activeOperator = "x"
+            } else activeOperator = sign
+
+            const inactiveOperators = {...allOperators}
+            delete inactiveOperators[activeOperator]
+
+            setDisplayExpression(prevState => {
+                    if (activeOperator === "%") {
+                        if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                            setExpression(prevState => prevState + allOperators[activeOperator])
+                            return (prevState + activeOperator)
+                        } else return prevState
+                    } else if (prevState.charAt(prevState.length - 1) === activeOperator ||
+                        ((prevState.charAt(prevState.length - 1) === "(") && (activeOperator === "x" || activeOperator === "/"))) {
                         setExpression(prevState => prevState)
                         return prevState
+                    } else if (Object.keys(inactiveOperators).includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
+                        setExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
+                        return (prevState.slice(0, prevState.length - 1) + activeOperator)
                     } else {
-                        setExpression(prevState => prevState + target.id)
-                        return prevState + target.id
+                        setExpression(prevState => prevState + allOperators[activeOperator])
+                        return prevState + activeOperator
                     }
-                })
-                break
+                }
+            )
         }
-        document.getElementById("parenthesis").innerText = "( )"
-    }
 
-    const createButton = () => {
+        const onParenthesisClick = (target) => {
 
-        const buttons = [
-            {"name": "clear", "sign": "C"}, {"name": "percent", "sign": "%"}, {"name": "delete", "sign": "del"},
-            {"name": "divide", "sign": "/"}, {"name": "seven", "sign": "7"}, {"name": "eight", "sign": "8"},
-            {"name": "nine", "sign": "9"}, {"name": "multiply", "sign": "X"}, {"name": "four", "sign": "4"},
-            {"name": "five", "sign": "5"}, {"name": "six", "sign": "6"}, {"name": "subtract", "sign": "-"},
-            {"name": "one", "sign": "1"}, {"name": "two", "sign": "2"}, {"name": "three", "sign": "3"},
-            {"name": "add", "sign": "+"}, {"name": "zero", "sign": "0"}, {"name": "decimal", "sign": "."},
-            {"name": "parenthesis", "sign": "( )"}, {"name": "equals", "sign": "="},
-        ]
+            switch (target.id) {
+                case "(":
+                    setDisplayExpression(prevState => {
+                        if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                            setExpression(prevState => prevState + parenthesis[target.id])
+                            return prevState + target.id
+                        } else {
+                            setExpression(prevState => prevState + target.id)
+                            return prevState + target.id
+                        }
+                    })
+                    break
+                case ")":
+                    setDisplayExpression(prevState => {
+                        if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1))) {
+                            setExpression(prevState => prevState)
+                            return prevState
+                        } else {
+                            setExpression(prevState => prevState + target.id)
+                            return prevState + target.id
+                        }
+                    })
+                    break
+            }
+            document.getElementById("parenthesis").innerText = "( )"
+        }
 
         const onButtonClick = (e) => {
             switch (e) {
