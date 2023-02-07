@@ -31,7 +31,8 @@ function App() {
                 } else if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
                     setExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
                     return (prevState.slice(0, prevState.length - 1) + activeOperator)
-                } else if (prevState.charAt(prevState.length - 1) === activeOperator) {
+                } else if (prevState.charAt(prevState.length - 1) === activeOperator ||
+                    ((prevState.charAt(prevState.length - 1) === "(") && (activeOperator === "x" || activeOperator === "/"))) {
                     setExpression(prevState => prevState)
                     return prevState
                 } else {
@@ -41,7 +42,6 @@ function App() {
             }
         )
     }
-
     const onParenthesisClick = (target) => {
 
         const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
