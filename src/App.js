@@ -91,6 +91,17 @@ function App() {
             document.getElementById("parenthesis").innerText = "( )"
         }
 
+        const onDotClick = () => {
+            setDisplayExpression(prevState => {
+                    if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                        console.log("X")
+                        setExpression(prevState => prevState + ".")
+                        return prevState + "."
+                    } else return prevState
+                }
+            )
+        }
+
         const onButtonClick = (e) => {
             switch (e) {
                 case "C":
@@ -155,6 +166,9 @@ function App() {
                         () => {
                             document.getElementById("parenthesis").innerText = "( )"
                         }
+                    break
+                case ".":
+                    onDotClick()
                     break
                 default:
                     break
