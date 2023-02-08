@@ -170,6 +170,53 @@ function App() {
                 case ".":
                     onDotClick()
                     break
+                case "=":
+                    setExpression(prevExpressionState => {
+                            try {
+                                const result = Function('return ' + prevExpressionState)()
+                                setDisplayExpression(prevDisplayExpressionState => {
+                                        setHistoryExpression(prevHistoryState => {
+                                            if (prevHistoryState.length > 0) {
+                                                return prevHistoryState[prevHistoryState.length - 1].result.includes("Error") ?
+                                                    [...prevHistoryState.slice(0, prevHistoryState.length - 1), {
+                                                        historyExpression: prevDisplayExpressionState,
+                                                        result: result.toString()
+                                                    }] :
+                                                    [...prevHistoryState, {
+                                                        historyExpression: prevDisplayExpressionState,
+                                                        result: result.toString()
+                                                    }]
+                                            } else return [...prevHistoryState, {
+                                                historyExpression: prevDisplayExpressionState,
+                                                result: result.toString()
+                                            }]
+                                        })
+                                        return result.toString()
+                                    }
+                                )
+                                return result.toString()
+                            } catch (e) {
+                                setDisplayExpression(prevDisplayExpressionState => {
+                                    setHistoryExpression(prevHistoryState => {
+                                        if (prevHistoryState.length > 0) {
+                                            return prevHistoryState[prevHistoryState.length - 1].result.includes("Error") ?
+                                                prevHistoryState :
+                                                [...prevHistoryState, {
+                                                    historyExpression: prevDisplayExpressionState,
+                                                    result: "Expression Error"
+                                                }]
+                                        } else return [...prevHistoryState, {
+                                            historyExpression: prevDisplayExpressionState,
+                                            result: "Expression Error"
+                                        }]
+                                    })
+                                    return prevDisplayExpressionState
+                                })
+                                return prevExpressionState
+                            }
+                        }
+                    )
+                    break
                 default:
                     break
             }
@@ -179,9 +226,21 @@ function App() {
                                              onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
+    const createHistoryExpression = () => {
+        console.log(historyExpression.map(ele => ele.historyExpression))
+        console.log(historyExpression.map(ele => historyExpression.indexOf(ele)))
+        return historyExpression.map(ele =>
+            <div key={historyExpression.indexOf(ele)}>
+                <p>{ele.historyExpression}</p>{"="}<p>{ele.result}</p>
+            </div>)
+    }
+
     return (
         <div id={"calculator"}>
-            <div id={"display"}><p>{displayExpression}</p></div>
+            <div id={"display"}>
+                <div id={"historyExpressionContainer"}>{createHistoryExpression()}</div>
+                <div id={"expressionContainer"}>{displayExpression}</div>
+            </div>
             <div id={"buttons-container"}>
                 {createButton()}
             </div>
