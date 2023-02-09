@@ -228,7 +228,7 @@ function App() {
             }
         }
 
-        return buttons.map(button => <button id={button.name} className={"button"}
+        return buttons.map(button => <button id={button.name} key={button.name} className={"button"}
                                              onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
