@@ -105,8 +105,14 @@ function App() {
         const onButtonClick = (e) => {
             switch (e) {
                 case "C":
-                    setDisplayExpression("")
-                    setExpression("")
+                    if(expression === "") {
+                        setDisplayExpression("")
+                        setExpression("")
+                        setHistoryExpression([])
+                    } else {
+                        setExpression("")
+                        setDisplayExpression("")
+                    }
                     break
                 case "del":
                     setDisplayExpression(prevState => prevState.slice(0, prevState.length - 1))
