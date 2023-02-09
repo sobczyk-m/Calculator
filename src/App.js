@@ -178,18 +178,18 @@ function App() {
                                         setHistoryExpression(prevHistoryState => {
                                             if (prevHistoryState.length > 0) {
                                                 return prevHistoryState[prevHistoryState.length - 1].result.includes("Error") ?
-                                                    [...prevHistoryState.slice(0, prevHistoryState.length - 1), {
+                                                    [{
                                                         historyExpression: prevDisplayExpressionState,
                                                         result: result.toString()
-                                                    }] :
-                                                    [...prevHistoryState, {
+                                                    }, ...prevHistoryState.slice(0, prevHistoryState.length - 1)] :
+                                                    [{
                                                         historyExpression: prevDisplayExpressionState,
                                                         result: result.toString()
-                                                    }]
-                                            } else return [...prevHistoryState, {
+                                                    }, ...prevHistoryState]
+                                            } else return [{
                                                 historyExpression: prevDisplayExpressionState,
                                                 result: result.toString()
-                                            }]
+                                            }, ...prevHistoryState]
                                         })
                                         return result.toString()
                                     }
@@ -201,14 +201,14 @@ function App() {
                                         if (prevHistoryState.length > 0) {
                                             return prevHistoryState[prevHistoryState.length - 1].result.includes("Error") ?
                                                 prevHistoryState :
-                                                [...prevHistoryState, {
+                                                [{
                                                     historyExpression: prevDisplayExpressionState,
                                                     result: "Expression Error"
-                                                }]
-                                        } else return [...prevHistoryState, {
+                                                }, ...prevHistoryState]
+                                        } else return [{
                                             historyExpression: prevDisplayExpressionState,
                                             result: "Expression Error"
-                                        }]
+                                        }, ...prevHistoryState]
                                     })
                                     return prevDisplayExpressionState
                                 })
@@ -226,12 +226,16 @@ function App() {
                                              onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
+    const correctHistoryResultStyle = {"color": "blue"}
+    const incorrectHistoryResultStyle = {"color": "red"}
+
     const createHistoryExpression = () => {
-        console.log(historyExpression.map(ele => ele.historyExpression))
-        console.log(historyExpression.map(ele => historyExpression.indexOf(ele)))
         return historyExpression.map(ele =>
-            <div key={historyExpression.indexOf(ele)}>
-                <p>{ele.historyExpression}</p>{"="}<p>{ele.result}</p>
+            <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}>
+                <span>{ele.historyExpression}</span>
+                <span>{"="}</span>
+                <span style={ele.result.includes("Error") ?
+                    incorrectHistoryResultStyle : correctHistoryResultStyle}>{ele.result}</span>
             </div>)
     }
 
@@ -239,7 +243,7 @@ function App() {
         <div id={"calculator"}>
             <div id={"display"}>
                 <div id={"historyExpressionContainer"}>{createHistoryExpression()}</div>
-                <div id={"expressionContainer"}>{displayExpression}</div>
+                <div id={"expressionContainer"}><span>{displayExpression}</span></div>
             </div>
             <div id={"buttons-container"}>
                 {createButton()}
