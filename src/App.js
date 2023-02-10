@@ -63,11 +63,11 @@ function App() {
         }
 
         const onParenthesisClick = (target) => {
-
             switch (target.id) {
                 case "(":
                     setDisplayExpression(prevState => {
-                        if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                        if (allNumbers.includes(prevState.charAt(prevState.length - 1))
+                            || prevState[prevState.length - 1] === "%") {
                             setExpression(prevState => prevState + parenthesis[target.id])
                             return prevState + target.id
                         } else {
@@ -78,7 +78,8 @@ function App() {
                     break
                 case ")":
                     setDisplayExpression(prevState => {
-                        if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1))) {
+                        if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1))
+                            && prevState[prevState.length - 1] !== "%") {
                             setExpression(prevState => prevState)
                             return prevState
                         } else {
