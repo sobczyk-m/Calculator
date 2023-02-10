@@ -128,8 +128,16 @@ function App() {
                 case "7":
                 case "8":
                 case "9":
-                    setDisplayExpression(prevState => prevState + e)
-                    setExpression(prevState => prevState + e)
+                    setDisplayExpression(prevState => {
+                            if (prevState[prevState.length - 1] === "%") {
+                                setExpression(prevState => prevState + "*" + e)
+                                return prevState + e
+                            } else {
+                                setExpression(prevState => prevState + e)
+                                return prevState + e
+                            }
+                        }
+                    )
                     break
                 case "X":
                     onOperatorClick("X")
