@@ -43,7 +43,7 @@ function App() {
 
             setDisplayExpression(prevState => {
                     if (activeOperator === "%") {
-                        if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                        if (allNumbers.includes(prevState.charAt(prevState.length - 1)) || prevState.charAt(prevState.length - 1) === ")") {
                             setExpression(prevState => prevState + allOperators[activeOperator])
                             return (prevState + activeOperator)
                         } else return prevState
