@@ -188,27 +188,28 @@ function App() {
                     setExpression(prevExpressionState => {
                             try {
                                 const result = Function('return ' + prevExpressionState)()
+                                const redundantPartOfResult = /[.]*0+$/
                                 setDisplayExpression(prevDisplayExpressionState => {
                                         setHistoryExpression(prevHistoryState => {
                                             if (prevHistoryState.length > 0) {
                                                 return prevHistoryState[0].result.includes("Error") ?
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
-                                                        result: result.toFixed(8).toString()
+                                                        result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
                                                     }, ...prevHistoryState.slice(1)] :
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
-                                                        result: result.toFixed(8).toString()
+                                                        result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
                                                     }, ...prevHistoryState]
                                             } else return [{
                                                 historyExpression: prevDisplayExpressionState,
-                                                result: result.toFixed(8).toString()
+                                                result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
                                             }, ...prevHistoryState]
                                         })
-                                        return result.toFixed(8).toString()
+                                        return result.toFixed(8).toString().replace(redundantPartOfResult, "")
                                     }
                                 )
-                                return result.toFixed(8).toString()
+                                return result.toFixed(8).toString().replace(redundantPartOfResult, "")
                             } catch (e) {
                                 setDisplayExpression(prevDisplayExpressionState => {
                                     setHistoryExpression(prevHistoryState => {
