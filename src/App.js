@@ -105,7 +105,7 @@ function App() {
         const onButtonClick = (e) => {
             switch (e) {
                 case "C":
-                    if(expression === "") {
+                    if (expression === "") {
                         setDisplayExpression("")
                         setExpression("")
                         setHistoryExpression([])
@@ -183,11 +183,11 @@ function App() {
                                 setDisplayExpression(prevDisplayExpressionState => {
                                         setHistoryExpression(prevHistoryState => {
                                             if (prevHistoryState.length > 0) {
-                                                return prevHistoryState[prevHistoryState.length - 1].result.includes("Error") ?
+                                                return prevHistoryState[0].result.includes("Error") ?
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
                                                         result: result.toString()
-                                                    }, ...prevHistoryState.slice(0, prevHistoryState.length - 1)] :
+                                                    }, ...prevHistoryState.slice(1)] :
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
                                                         result: result.toString()
@@ -205,7 +205,7 @@ function App() {
                                 setDisplayExpression(prevDisplayExpressionState => {
                                     setHistoryExpression(prevHistoryState => {
                                         if (prevHistoryState.length > 0) {
-                                            return prevHistoryState[prevHistoryState.length - 1].result.includes("Error") ?
+                                            return prevHistoryState[0].result.includes("Error") ?
                                                 prevHistoryState :
                                                 [{
                                                     historyExpression: prevDisplayExpressionState,
