@@ -186,21 +186,21 @@ function App() {
                                                 return prevHistoryState[0].result.includes("Error") ?
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
-                                                        result: result.toString()
+                                                        result: result.toFixed(8).toString()
                                                     }, ...prevHistoryState.slice(1)] :
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
-                                                        result: result.toString()
+                                                        result: result.toFixed(8).toString()
                                                     }, ...prevHistoryState]
                                             } else return [{
                                                 historyExpression: prevDisplayExpressionState,
-                                                result: result.toString()
+                                                result: result.toFixed(8).toString()
                                             }, ...prevHistoryState]
                                         })
-                                        return result.toString()
+                                        return result.toFixed(8).toString()
                                     }
                                 )
-                                return result.toString()
+                                return result.toFixed(8).toString()
                             } catch (e) {
                                 setDisplayExpression(prevDisplayExpressionState => {
                                     setHistoryExpression(prevHistoryState => {
