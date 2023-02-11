@@ -246,7 +246,10 @@ function App() {
                                         setHistoryExpression(prevHistoryState => {
                                             if (prevHistoryState.length > 0) {
                                                 return prevHistoryState[0].result.includes("Error") ?
-                                                    prevHistoryState :
+                                                    [{
+                                                        historyExpression: prevDisplayExpressionState,
+                                                        result: "Expression Error"
+                                                    }, ...prevHistoryState.slice(1)] :
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
                                                         result: "Expression Error"
