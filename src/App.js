@@ -43,15 +43,16 @@ function App() {
 
             setDisplayExpression(prevState => {
                     if (activeOperator === "%") {
-                        if (allNumbers.includes(prevState.charAt(prevState.length - 1)) || prevState.charAt(prevState.length - 1) === ")") {
+                        if (allNumbers.includes(prevState[prevState.length - 1]) || prevState[prevState.length - 1] === ")") {
                             setExpression(prevState => prevState + allOperators[activeOperator])
                             return (prevState + activeOperator)
                         } else return prevState
-                    } else if (prevState.charAt(prevState.length - 1) === activeOperator ||
-                        ((prevState.charAt(prevState.length - 1) === "(") && (activeOperator === "x" || activeOperator === "/"))) {
+                    } else if (prevState[prevState.length - 1] === activeOperator ||
+                        ((prevState[prevState.length - 1] === "(") && (activeOperator === "x" || activeOperator === "/"))) {
                         setExpression(prevState => prevState)
                         return prevState
-                    } else if (Object.keys(inactiveOperators).includes(prevState.charAt(prevState.length - 1)) && prevState.charAt(prevState.length - 1) !== "%") {
+                    } else if (Object.keys(inactiveOperators).includes(prevState[prevState.length - 1])
+                        && prevState[prevState.length - 1] !== "%") {
                         setExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
                         return (prevState.slice(0, prevState.length - 1) + activeOperator)
                     } else {
@@ -66,7 +67,7 @@ function App() {
             switch (target.id) {
                 case "(":
                     setDisplayExpression(prevState => {
-                        if (allNumbers.includes(prevState.charAt(prevState.length - 1))
+                        if (allNumbers.includes(prevState[prevState.length - 1])
                             || prevState[prevState.length - 1] === "%"
                             || prevState[prevState.length - 1] === ")"
                         ) {
@@ -80,7 +81,7 @@ function App() {
                     break
                 case ")":
                     setDisplayExpression(prevState => {
-                        if (Object.keys(allOperators).includes(prevState.charAt(prevState.length - 1))
+                        if (Object.keys(allOperators).includes(prevState[prevState.length - 1])
                             && prevState[prevState.length - 1] !== "%") {
                             setExpression(prevState => prevState)
                             return prevState
@@ -96,7 +97,7 @@ function App() {
 
         const onDotClick = () => {
             setDisplayExpression(prevState => {
-                    if (allNumbers.includes(prevState.charAt(prevState.length - 1))) {
+                    if (allNumbers.includes(prevState[prevState.length - 1])) {
                         console.log("X")
                         setExpression(prevState => prevState + ".")
                         return prevState + "."
