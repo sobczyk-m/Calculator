@@ -122,7 +122,8 @@ function App() {
                             const lastChar = prevState[prevState.length - 1]
 
                             switch (true) {
-                                case Object.keys(allNumbers).includes(lastChar) && prevState[prevState.length - 2] === ")":
+                                case Object.keys(allNumbers).includes(lastChar) &&
+                                (prevState[prevState.length - 2] === ")" || prevState[prevState.length - 2] === "%"):
                                     setExpression(prevState =>
                                         prevState.slice(0, prevState.length - 2))
                                     return prevState.slice(0, prevState.length - 1)
