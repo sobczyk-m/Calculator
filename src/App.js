@@ -122,9 +122,9 @@ function App() {
                             const lastChar = prevState[prevState.length - 1]
 
                             switch (true) {
-                                case Object.keys(allOperators).includes(lastChar) :
+                                case Object.keys(allNumbers).includes(lastChar) && prevState[prevState.length - 2] === ")":
                                     setExpression(prevState =>
-                                        prevState.slice(0, prevState.length - allOperators[lastChar].length))
+                                        prevState.slice(0, prevState.length - 2))
                                     return prevState.slice(0, prevState.length - 1)
                                 case Object.keys(parenthesis).includes(lastChar)
                                 && (Object.keys(allNumbers).includes(prevState[prevState.length - 2])
@@ -132,6 +132,10 @@ function App() {
                                     || prevState[prevState.length - 2] === ")") !== false:
                                     setExpression(prevState =>
                                         prevState.slice(0, prevState.length - parenthesis[lastChar].length))
+                                    return prevState.slice(0, prevState.length - 1)
+                                case Object.keys(allOperators).includes(lastChar) :
+                                    setExpression(prevState =>
+                                        prevState.slice(0, prevState.length - allOperators[lastChar].length))
                                     return prevState.slice(0, prevState.length - 1)
                                 default:
                                     setExpression(prevState => prevState.slice(0, prevState.length - 1))
@@ -151,7 +155,7 @@ function App() {
                 case "8":
                 case "9":
                     setDisplayExpression(prevState => {
-                            if (prevState[prevState.length - 1] === "%") {
+                            if (prevState[prevState.length - 1] === "%" || prevState[prevState.length - 1] === ")") {
                                 setExpression(prevState => prevState + "*" + e)
                                 return prevState + e
                             } else {
