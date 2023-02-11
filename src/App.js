@@ -67,7 +67,9 @@ function App() {
                 case "(":
                     setDisplayExpression(prevState => {
                         if (allNumbers.includes(prevState.charAt(prevState.length - 1))
-                            || prevState[prevState.length - 1] === "%") {
+                            || prevState[prevState.length - 1] === "%"
+                            || prevState[prevState.length - 1] === ")"
+                        ) {
                             setExpression(prevState => prevState + parenthesis[target.id])
                             return prevState + target.id
                         } else {
@@ -116,8 +118,27 @@ function App() {
                     }
                     break
                 case "del":
-                    setDisplayExpression(prevState => prevState.slice(0, prevState.length - 1))
-                    setExpression(prevState => prevState.slice(0, prevState.length - 1))
+                    setDisplayExpression(prevState => {
+                            const lastChar = prevState[prevState.length - 1]
+
+                            switch (true) {
+                                case Object.keys(allOperators).includes(lastChar) :
+                                    setExpression(prevState =>
+                                        prevState.slice(0, prevState.length - allOperators[lastChar].length))
+                                    return prevState.slice(0, prevState.length - 1)
+                                case Object.keys(parenthesis).includes(lastChar)
+                                && (Object.keys(allNumbers).includes(prevState[prevState.length - 2])
+                                    || prevState[prevState.length - 2] === "%"
+                                    || prevState[prevState.length - 2] === ")") !== false:
+                                    setExpression(prevState =>
+                                        prevState.slice(0, prevState.length - parenthesis[lastChar].length))
+                                    return prevState.slice(0, prevState.length - 1)
+                                default:
+                                    setExpression(prevState => prevState.slice(0, prevState.length - 1))
+                                    return prevState.slice(0, prevState.length - 1)
+                            }
+                        }
+                    )
                     break
                 case "0":
                 case "1":
