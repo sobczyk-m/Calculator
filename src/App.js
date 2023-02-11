@@ -207,53 +207,57 @@ function App() {
                     onDotClick()
                     break
                 case "=":
-                    setExpression(prevExpressionState => {
-                            try {
-                                const result = Function('return ' + prevExpressionState)()
-                                const redundantPartOfResult = /[.]*0+$/
-                                setDisplayExpression(prevDisplayExpressionState => {
+                    if (
+                        Object.keys(allOperators).some(operator => displayExpression.includes(operator))
+                        || Object.keys(parenthesis).some(operator => displayExpression.includes(operator))
+                    ) {
+                        setExpression(prevExpressionState => {
+                                try {
+                                    const result = Function('return ' + prevExpressionState)()
+                                    const redundantPartOfResult = /[.]*0+$/
+                                    setDisplayExpression(prevDisplayExpressionState => {
+                                            setHistoryExpression(prevHistoryState => {
+                                                if (prevHistoryState.length > 0) {
+                                                    return prevHistoryState[0].result.includes("Error") ?
+                                                        [{
+                                                            historyExpression: prevDisplayExpressionState,
+                                                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                                        }, ...prevHistoryState.slice(1)] :
+                                                        [{
+                                                            historyExpression: prevDisplayExpressionState,
+                                                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                                        }, ...prevHistoryState]
+                                                } else return [{
+                                                    historyExpression: prevDisplayExpressionState,
+                                                    result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                                }, ...prevHistoryState]
+                                            })
+                                            return result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                        }
+                                    )
+                                    return result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                } catch (e) {
+                                    setDisplayExpression(prevDisplayExpressionState => {
                                         setHistoryExpression(prevHistoryState => {
                                             if (prevHistoryState.length > 0) {
                                                 return prevHistoryState[0].result.includes("Error") ?
+                                                    prevHistoryState :
                                                     [{
                                                         historyExpression: prevDisplayExpressionState,
-                                                        result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                                    }, ...prevHistoryState.slice(1)] :
-                                                    [{
-                                                        historyExpression: prevDisplayExpressionState,
-                                                        result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                                        result: "Expression Error"
                                                     }, ...prevHistoryState]
                                             } else return [{
                                                 historyExpression: prevDisplayExpressionState,
-                                                result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                                result: "Expression Error"
                                             }, ...prevHistoryState]
                                         })
-                                        return result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                    }
-                                )
-                                return result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                            } catch (e) {
-                                setDisplayExpression(prevDisplayExpressionState => {
-                                    setHistoryExpression(prevHistoryState => {
-                                        if (prevHistoryState.length > 0) {
-                                            return prevHistoryState[0].result.includes("Error") ?
-                                                prevHistoryState :
-                                                [{
-                                                    historyExpression: prevDisplayExpressionState,
-                                                    result: "Expression Error"
-                                                }, ...prevHistoryState]
-                                        } else return [{
-                                            historyExpression: prevDisplayExpressionState,
-                                            result: "Expression Error"
-                                        }, ...prevHistoryState]
+                                        return prevDisplayExpressionState
                                     })
-                                    return prevDisplayExpressionState
-                                })
-                                return prevExpressionState
+                                    return prevExpressionState
+                                }
                             }
-                        }
-                    )
-                    break
+                        )
+                    } else break
                 default:
                     break
             }
