@@ -244,7 +244,28 @@ function App() {
             }
         }
 
+        const buttonStyle = {
+            operator: {backgroundColor: "#4f5d75"},
+            undo: {backgroundColor: "#a4161a"},
+            equals: {backgroundColor: "#cf9521"},
+            default: {backgroundColor: "#333533"}
+        }
+
+        const setButtonStyle = (sign) => {
+            switch (true) {
+                case Object.keys(allOperators).includes(sign):
+                    return buttonStyle.operator
+                case sign === "C" || sign === "del":
+                    return buttonStyle.undo
+                case sign === "=":
+                    return buttonStyle.equals
+                default:
+                    return buttonStyle.default
+            }
+        }
+
         return buttons.map(button => <button id={button.name} key={button.name} className={"button"}
+                                             style={setButtonStyle(button.sign)}
                                              onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
