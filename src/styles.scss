@@ -4,18 +4,38 @@
   padding: 0;
 }
 
+$btn-color: #333533;
+$calc-bg-color: #adb5bd;
+$display-bg-color: #0f4c5c;
+$text-color: #e7ecef;
+$font-size-big: 1.5rem;
+$font-size-small: 1.2rem;
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+@font-face {
+  font-family: "wwDigital";
+  src: local("wwDigital"),
+  url("fonts/wwDigital.ttf") format("truetype");
+}
+
 #root {
   height: 100vh;
   @include flex-center;
+  background-color: #e5e6e4;
 }
 
 #calculator {
+  * {
+    font-family: wwDigital, sans-serif;
+    font-size: $font-size-big;
+    color: $text-color;
+  }
+
   height: 550px;
   width: 350px;
   padding: 10px;
@@ -23,12 +43,15 @@
   flex-direction: column;
   gap: 15px;
   border: 5px solid black;
+  background-color: $calc-bg-color;
 }
 
 #display {
   width: 100%;
   height: 40%;
-  border: 2px solid red;
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: $display-bg-color;
 }
 
 #buttons-container {
@@ -42,14 +65,15 @@
 
 .button {
   @include flex-center;
-  border: 1px solid black;
+  border: 1px solid $btn-color;
+  border-radius: 10px;
+  background-color: $btn-color;
 }
 
 #expressionContainer {
   width: 100%;
   height: 30%;
   padding: 0 10px;
-  font-size: 1.5rem;
   letter-spacing: 1px;
   white-space: nowrap;
   display: flex;
@@ -60,15 +84,18 @@
 }
 
 #historyExpressionContainer {
+  span {
+    font-size: $font-size-small;
+  }
+
   transform: rotateY(-180deg);
   width: 100%;
   height: 70%;
   padding: 10px 10px 20px 10px;
-  font-size: 1.2rem;
   letter-spacing: 1px;
   white-space: nowrap;
   display: grid;
-  grid-template-rows:repeat(auto-fit, 1.2rem);
+  grid-template-rows:repeat(auto-fit, $font-size-small);
   grid-template-columns:min-content;
   justify-items: start;
   row-gap: 10px;

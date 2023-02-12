@@ -252,7 +252,7 @@ function App() {
                                              onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
-    const correctHistoryResultStyle = {"color": "blue"}
+    const correctHistoryResultStyle = {"color": "#ffa500"}
     const incorrectHistoryResultStyle = {"color": "red"}
 
     const createHistoryExpression = () => {

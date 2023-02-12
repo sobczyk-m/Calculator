@@ -4,11 +4,16 @@
   padding: 0;
 }
 
+@font-face {
+  font-family: "wwDigital";
+  src: local("wwDigital"), url("fonts/wwDigital.ttf") format("truetype");
+}
 #root {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #e5e6e4;
 }
 
 #calculator {
@@ -19,12 +24,20 @@
   flex-direction: column;
   gap: 15px;
   border: 5px solid black;
+  background-color: #adb5bd;
+}
+#calculator * {
+  font-family: wwDigital, sans-serif;
+  font-size: 1.5rem;
+  color: #e7ecef;
 }
 
 #display {
   width: 100%;
   height: 40%;
-  border: 2px solid red;
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: #0f4c5c;
 }
 
 #buttons-container {
@@ -40,14 +53,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
+  border: 1px solid #333533;
+  border-radius: 10px;
+  background-color: #333533;
 }
 
 #expressionContainer {
   width: 100%;
   height: 30%;
   padding: 0 10px;
-  font-size: 1.5rem;
   letter-spacing: 1px;
   white-space: nowrap;
   display: flex;
@@ -62,7 +76,6 @@
   width: 100%;
   height: 70%;
   padding: 10px 10px 20px 10px;
-  font-size: 1.2rem;
   letter-spacing: 1px;
   white-space: nowrap;
   display: grid;
@@ -71,6 +84,9 @@
   justify-items: start;
   row-gap: 10px;
   overflow: auto;
+}
+#historyExpressionContainer span {
+  font-size: 1.2rem;
 }
 
 .historyCalculationWrapper {
