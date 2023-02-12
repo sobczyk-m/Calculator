@@ -9,7 +9,7 @@ function App() {
     const createButton = () => {
 
         const buttons = [
-            {"name": "clear", "sign": "C"}, {"name": "percent", "sign": "%"}, {"name": "delete", "sign": "del"},
+            {"name": "clear", "sign": "C"}, {"name": "delete", "sign": "del"}, {"name": "percent", "sign": "%"},
             {"name": "divide", "sign": "/"}, {"name": "seven", "sign": "7"}, {"name": "eight", "sign": "8"},
             {"name": "nine", "sign": "9"}, {"name": "multiply", "sign": "x"}, {"name": "four", "sign": "4"},
             {"name": "five", "sign": "5"}, {"name": "six", "sign": "6"}, {"name": "subtract", "sign": "-"},
