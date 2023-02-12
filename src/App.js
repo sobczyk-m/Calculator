@@ -36,7 +36,7 @@ function App() {
 
         const onOperatorClick = (sign) => {
 
-            let activeOperator = ""
+            let activeOperator
             if (sign === "X") {
                 activeOperator = "x"
             } else activeOperator = sign
