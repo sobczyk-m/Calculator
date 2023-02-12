@@ -11,7 +11,7 @@ function App() {
         const buttons = [
             {"name": "clear", "sign": "C"}, {"name": "percent", "sign": "%"}, {"name": "delete", "sign": "del"},
             {"name": "divide", "sign": "/"}, {"name": "seven", "sign": "7"}, {"name": "eight", "sign": "8"},
-            {"name": "nine", "sign": "9"}, {"name": "multiply", "sign": "X"}, {"name": "four", "sign": "4"},
+            {"name": "nine", "sign": "9"}, {"name": "multiply", "sign": "x"}, {"name": "four", "sign": "4"},
             {"name": "five", "sign": "5"}, {"name": "six", "sign": "6"}, {"name": "subtract", "sign": "-"},
             {"name": "one", "sign": "1"}, {"name": "two", "sign": "2"}, {"name": "three", "sign": "3"},
             {"name": "add", "sign": "+"}, {"name": "zero", "sign": "0"}, {"name": "decimal", "sign": "."},
@@ -36,11 +36,7 @@ function App() {
 
         const onOperatorClick = (sign) => {
 
-            let activeOperator
-            if (sign === "X") {
-                activeOperator = "x"
-            } else activeOperator = sign
-
+            const activeOperator = sign
             const inactiveOperators = {...allOperators}
             delete inactiveOperators[activeOperator]
 
@@ -156,8 +152,8 @@ function App() {
                         setDisplayExpression(displayExpression + e)
                     }
                     break
-                case "X":
-                    onOperatorClick("X")
+                case "x":
+                    onOperatorClick("x")
                     break
                 case "/":
                     onOperatorClick("/")
