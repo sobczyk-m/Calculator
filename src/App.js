@@ -244,7 +244,7 @@ function App() {
                         }
                     } else break
                 default:
-                    break
+                    throw new Error("Unrecognized character, no action to perform")
             }
         }
 
