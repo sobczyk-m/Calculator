@@ -2,7 +2,7 @@ import {useState} from "react"
 
 function App() {
 
-    const [expression, setExpression] = useState("")
+    const [mathExpression, setMathExpression] = useState("")
     const [displayExpression, setDisplayExpression] = useState("")
     const [historyExpression, setHistoryExpression] = useState([])
 
@@ -44,19 +44,19 @@ function App() {
             setDisplayExpression(prevState => {
                     if (activeOperator === "%") {
                         if (allNumbers.includes(prevState[prevState.length - 1]) || prevState[prevState.length - 1] === ")") {
-                            setExpression(prevState => prevState + allOperators[activeOperator])
+                            setMathExpression(prevState => prevState + allOperators[activeOperator])
                             return (prevState + activeOperator)
                         } else return prevState
                     } else if (prevState[prevState.length - 1] === activeOperator ||
                         ((prevState[prevState.length - 1] === "(") && (activeOperator === "x" || activeOperator === "/"))) {
-                        setExpression(prevState => prevState)
+                        setMathExpression(prevState => prevState)
                         return prevState
                     } else if (Object.keys(inactiveOperators).includes(prevState[prevState.length - 1])
                         && prevState[prevState.length - 1] !== "%") {
-                        setExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
+                        setMathExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
                         return (prevState.slice(0, prevState.length - 1) + activeOperator)
                     } else {
-                        setExpression(prevState => prevState + allOperators[activeOperator])
+                        setMathExpression(prevState => prevState + allOperators[activeOperator])
                         return prevState + activeOperator
                     }
                 }
@@ -71,10 +71,10 @@ function App() {
                             || prevState[prevState.length - 1] === "%"
                             || prevState[prevState.length - 1] === ")"
                         ) {
-                            setExpression(prevState => prevState + parenthesis[target.id])
+                            setMathExpression(prevState => prevState + parenthesis[target.id])
                             return prevState + target.id
                         } else {
-                            setExpression(prevState => prevState + target.id)
+                            setMathExpression(prevState => prevState + target.id)
                             return prevState + target.id
                         }
                     })
@@ -83,10 +83,10 @@ function App() {
                     setDisplayExpression(prevState => {
                         if (Object.keys(allOperators).includes(prevState[prevState.length - 1])
                             && prevState[prevState.length - 1] !== "%") {
-                            setExpression(prevState => prevState)
+                            setMathExpression(prevState => prevState)
                             return prevState
                         } else {
-                            setExpression(prevState => prevState + target.id)
+                            setMathExpression(prevState => prevState + target.id)
                             return prevState + target.id
                         }
                     })
@@ -99,7 +99,7 @@ function App() {
             setDisplayExpression(prevState => {
                     if (allNumbers.includes(prevState[prevState.length - 1])) {
                         console.log("X")
-                        setExpression(prevState => prevState + ".")
+                        setMathExpression(prevState => prevState + ".")
                         return prevState + "."
                     } else return prevState
                 }
@@ -109,12 +109,12 @@ function App() {
         const onButtonClick = (e) => {
             switch (e) {
                 case "C":
-                    if (expression === "") {
+                    if (mathExpression === "") {
                         setDisplayExpression("")
-                        setExpression("")
+                        setMathExpression("")
                         setHistoryExpression([])
                     } else {
-                        setExpression("")
+                        setMathExpression("")
                         setDisplayExpression("")
                     }
                     break
@@ -125,22 +125,22 @@ function App() {
                             switch (true) {
                                 case Object.keys(allNumbers).includes(lastChar) &&
                                 (prevState[prevState.length - 2] === ")" || prevState[prevState.length - 2] === "%"):
-                                    setExpression(prevState =>
+                                    setMathExpression(prevState =>
                                         prevState.slice(0, prevState.length - 2))
                                     return prevState.slice(0, prevState.length - 1)
                                 case Object.keys(parenthesis).includes(lastChar)
                                 && (Object.keys(allNumbers).includes(prevState[prevState.length - 2])
                                     || prevState[prevState.length - 2] === "%"
                                     || prevState[prevState.length - 2] === ")") !== false:
-                                    setExpression(prevState =>
+                                    setMathExpression(prevState =>
                                         prevState.slice(0, prevState.length - parenthesis[lastChar].length))
                                     return prevState.slice(0, prevState.length - 1)
                                 case Object.keys(allOperators).includes(lastChar) :
-                                    setExpression(prevState =>
+                                    setMathExpression(prevState =>
                                         prevState.slice(0, prevState.length - allOperators[lastChar].length))
                                     return prevState.slice(0, prevState.length - 1)
                                 default:
-                                    setExpression(prevState => prevState.slice(0, prevState.length - 1))
+                                    setMathExpression(prevState => prevState.slice(0, prevState.length - 1))
                                     return prevState.slice(0, prevState.length - 1)
                             }
                         }
@@ -158,10 +158,10 @@ function App() {
                 case "9":
                     setDisplayExpression(prevState => {
                             if (prevState[prevState.length - 1] === "%" || prevState[prevState.length - 1] === ")") {
-                                setExpression(prevState => prevState + "*" + e)
+                                setMathExpression(prevState => prevState + "*" + e)
                                 return prevState + e
                             } else {
-                                setExpression(prevState => prevState + e)
+                                setMathExpression(prevState => prevState + e)
                                 return prevState + e
                             }
                         }
@@ -217,7 +217,7 @@ function App() {
                         Object.keys(allOperators).some(operator => displayExpression.includes(operator))
                         || Object.keys(parenthesis).some(operator => displayExpression.includes(operator))
                     ) {
-                        setExpression(prevExpressionState => {
+                        setMathExpression(prevExpressionState => {
                                 try {
                                     const result = Function('return ' + prevExpressionState)()
                                     const redundantPartOfResult = /[.]*0+$/
