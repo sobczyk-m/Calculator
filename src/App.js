@@ -86,6 +86,8 @@ function App() {
                         setDisplayExpression(displayExpression + target.id)
                     }
                     break
+                default:
+                    throw new Error("Unrecognized character, no action to perform")
             }
             document.getElementById("parenthesis").innerText = "( )"
         }
