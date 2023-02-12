@@ -50,7 +50,8 @@ function App() {
                     setDisplayExpression((displayExpression + activeOperator))
                 } else return null
             } else if (lastDisplayChar === activeOperator ||
-                ((lastDisplayChar === "(") && (activeOperator === "x" || activeOperator === "/"))) {
+                ((lastDisplayChar === "(" || displayExpression === "" || displayExpression === "-" || displayExpression === "+")
+                    && (activeOperator === "x" || activeOperator === "/"))) {
                 return null
             } else if (Object.keys(inactiveOperators).includes(lastDisplayChar)
                 && lastDisplayChar !== "%") {
