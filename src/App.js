@@ -31,6 +31,9 @@ function App() {
             ")": ")",
         }
 
+        const lastDisplayChar = displayExpression[displayExpression.length - 1]
+        const penultimateDisplayChar = displayExpression[displayExpression.length - 2]
+
         const onOperatorClick = (sign) => {
 
             let activeOperator = ""
@@ -41,69 +44,57 @@ function App() {
             const inactiveOperators = {...allOperators}
             delete inactiveOperators[activeOperator]
 
-            setDisplayExpression(prevState => {
-                    if (activeOperator === "%") {
-                        if (allNumbers.includes(prevState[prevState.length - 1]) || prevState[prevState.length - 1] === ")") {
-                            setMathExpression(prevState => prevState + allOperators[activeOperator])
-                            return (prevState + activeOperator)
-                        } else return prevState
-                    } else if (prevState[prevState.length - 1] === activeOperator ||
-                        ((prevState[prevState.length - 1] === "(") && (activeOperator === "x" || activeOperator === "/"))) {
-                        setMathExpression(prevState => prevState)
-                        return prevState
-                    } else if (Object.keys(inactiveOperators).includes(prevState[prevState.length - 1])
-                        && prevState[prevState.length - 1] !== "%") {
-                        setMathExpression(prevState => prevState.slice(0, prevState.length - 1) + allOperators[activeOperator])
-                        return (prevState.slice(0, prevState.length - 1) + activeOperator)
-                    } else {
-                        setMathExpression(prevState => prevState + allOperators[activeOperator])
-                        return prevState + activeOperator
-                    }
-                }
-            )
+            if (activeOperator === "%") {
+                if (allNumbers.includes(lastDisplayChar) || lastDisplayChar === ")") {
+                    setMathExpression(mathExpression + allOperators[activeOperator])
+                    setDisplayExpression((displayExpression + activeOperator))
+                } else return null
+            } else if (lastDisplayChar === activeOperator ||
+                ((lastDisplayChar === "(") && (activeOperator === "x" || activeOperator === "/"))) {
+                return null
+            } else if (Object.keys(inactiveOperators).includes(lastDisplayChar)
+                && lastDisplayChar !== "%") {
+                setMathExpression(mathExpression.slice(0, mathExpression.length - 1) + allOperators[activeOperator])
+                setDisplayExpression((displayExpression.slice(0, displayExpression.length - 1) + activeOperator))
+            } else {
+                setMathExpression(mathExpression + allOperators[activeOperator])
+                setDisplayExpression(displayExpression + activeOperator)
+            }
         }
 
         const onParenthesisClick = (target) => {
             switch (target.id) {
                 case "(":
-                    setDisplayExpression(prevState => {
-                        if (allNumbers.includes(prevState[prevState.length - 1])
-                            || prevState[prevState.length - 1] === "%"
-                            || prevState[prevState.length - 1] === ")"
-                        ) {
-                            setMathExpression(prevState => prevState + parenthesis[target.id])
-                            return prevState + target.id
-                        } else {
-                            setMathExpression(prevState => prevState + target.id)
-                            return prevState + target.id
-                        }
-                    })
+                    if (allNumbers.includes(lastDisplayChar)
+                        || lastDisplayChar === "%"
+                        || lastDisplayChar === ")"
+                    ) {
+                        setMathExpression(mathExpression + parenthesis[target.id])
+                        setDisplayExpression(displayExpression + target.id)
+                    } else {
+                        setMathExpression(mathExpression + target.id)
+                        setDisplayExpression(displayExpression + target.id)
+                    }
                     break
                 case ")":
-                    setDisplayExpression(prevState => {
-                        if (Object.keys(allOperators).includes(prevState[prevState.length - 1])
-                            && prevState[prevState.length - 1] !== "%") {
-                            setMathExpression(prevState => prevState)
-                            return prevState
-                        } else {
-                            setMathExpression(prevState => prevState + target.id)
-                            return prevState + target.id
-                        }
-                    })
+                    if (Object.keys(allOperators).includes(lastDisplayChar)
+                        && lastDisplayChar !== "%") {
+                        return null
+                    } else {
+                        setMathExpression(mathExpression + target.id)
+                        setDisplayExpression(displayExpression + target.id)
+                    }
                     break
             }
             document.getElementById("parenthesis").innerText = "( )"
         }
 
         const onDotClick = () => {
-            setDisplayExpression(prevState => {
-                    if (allNumbers.includes(prevState[prevState.length - 1])) {
-                        console.log("X")
-                        setMathExpression(prevState => prevState + ".")
-                        return prevState + "."
-                    } else return prevState
-                }
-            )
+            if (allNumbers.includes(lastDisplayChar)) {
+                console.log("X")
+                setMathExpression(mathExpression + ".")
+                setDisplayExpression(displayExpression + ".")
+            } else return null
         }
 
         const onButtonClick = (e) => {
@@ -119,32 +110,30 @@ function App() {
                     }
                     break
                 case "del":
-                    setDisplayExpression(prevState => {
-                            const lastChar = prevState[prevState.length - 1]
-
-                            switch (true) {
-                                case Object.keys(allNumbers).includes(lastChar) &&
-                                (prevState[prevState.length - 2] === ")" || prevState[prevState.length - 2] === "%"):
-                                    setMathExpression(prevState =>
-                                        prevState.slice(0, prevState.length - 2))
-                                    return prevState.slice(0, prevState.length - 1)
-                                case Object.keys(parenthesis).includes(lastChar)
-                                && (Object.keys(allNumbers).includes(prevState[prevState.length - 2])
-                                    || prevState[prevState.length - 2] === "%"
-                                    || prevState[prevState.length - 2] === ")") !== false:
-                                    setMathExpression(prevState =>
-                                        prevState.slice(0, prevState.length - parenthesis[lastChar].length))
-                                    return prevState.slice(0, prevState.length - 1)
-                                case Object.keys(allOperators).includes(lastChar) :
-                                    setMathExpression(prevState =>
-                                        prevState.slice(0, prevState.length - allOperators[lastChar].length))
-                                    return prevState.slice(0, prevState.length - 1)
-                                default:
-                                    setMathExpression(prevState => prevState.slice(0, prevState.length - 1))
-                                    return prevState.slice(0, prevState.length - 1)
-                            }
-                        }
-                    )
+                    switch (true) {
+                        case Object.keys(allNumbers).includes(lastDisplayChar) &&
+                        (displayExpression[displayExpression.length - 2] === ")" || penultimateDisplayChar === "%"):
+                            setMathExpression(mathExpression.slice(0, mathExpression.length - 2))
+                            setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                            break
+                        case Object.keys(parenthesis).includes(lastDisplayChar)
+                        && (Object.keys(allNumbers).includes(penultimateDisplayChar)
+                            || penultimateDisplayChar === "%"
+                            || penultimateDisplayChar === ")") !== false:
+                            setMathExpression(mathExpression.slice(0,
+                                mathExpression.length - parenthesis[lastDisplayChar].length))
+                            setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                            break
+                        case Object.keys(allOperators).includes(lastDisplayChar) :
+                            setMathExpression(mathExpression.slice(0,
+                                mathExpression.length - allOperators[lastDisplayChar].length))
+                            setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                            break
+                        default:
+                            setMathExpression(mathExpression.slice(0, mathExpression.length - 1))
+                            setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                            break
+                    }
                     break
                 case "0":
                 case "1":
@@ -156,16 +145,13 @@ function App() {
                 case "7":
                 case "8":
                 case "9":
-                    setDisplayExpression(prevState => {
-                            if (prevState[prevState.length - 1] === "%" || prevState[prevState.length - 1] === ")") {
-                                setMathExpression(prevState => prevState + "*" + e)
-                                return prevState + e
-                            } else {
-                                setMathExpression(prevState => prevState + e)
-                                return prevState + e
-                            }
-                        }
-                    )
+                    if (lastDisplayChar === "%" || lastDisplayChar === ")") {
+                        setMathExpression(mathExpression + "*" + e)
+                        setDisplayExpression(displayExpression + e)
+                    } else {
+                        setMathExpression(mathExpression + e)
+                        setDisplayExpression(displayExpression + e)
+                    }
                     break
                 case "X":
                     onOperatorClick("X")
@@ -217,55 +203,42 @@ function App() {
                         Object.keys(allOperators).some(operator => displayExpression.includes(operator))
                         || Object.keys(parenthesis).some(operator => displayExpression.includes(operator))
                     ) {
-                        setMathExpression(prevExpressionState => {
-                                try {
-                                    const result = Function('return ' + prevExpressionState)()
-                                    const redundantPartOfResult = /[.]*0+$/
-                                    setDisplayExpression(prevDisplayExpressionState => {
-                                            setHistoryExpression(prevHistoryState => {
-                                                if (prevHistoryState.length > 0) {
-                                                    return prevHistoryState[0].result.includes("Error") ?
-                                                        [{
-                                                            historyExpression: prevDisplayExpressionState,
-                                                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                                        }, ...prevHistoryState.slice(1)] :
-                                                        [{
-                                                            historyExpression: prevDisplayExpressionState,
-                                                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                                        }, ...prevHistoryState]
-                                                } else return [{
-                                                    historyExpression: prevDisplayExpressionState,
-                                                    result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                                }, ...prevHistoryState]
-                                            })
-                                            return result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                        }
-                                    )
-                                    return result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                } catch (e) {
-                                    setDisplayExpression(prevDisplayExpressionState => {
-                                        setHistoryExpression(prevHistoryState => {
-                                            if (prevHistoryState.length > 0) {
-                                                return prevHistoryState[0].result.includes("Error") ?
-                                                    [{
-                                                        historyExpression: prevDisplayExpressionState,
-                                                        result: "Expression Error"
-                                                    }, ...prevHistoryState.slice(1)] :
-                                                    [{
-                                                        historyExpression: prevDisplayExpressionState,
-                                                        result: "Expression Error"
-                                                    }, ...prevHistoryState]
-                                            } else return [{
-                                                historyExpression: prevDisplayExpressionState,
-                                                result: "Expression Error"
-                                            }, ...prevHistoryState]
-                                        })
-                                        return prevDisplayExpressionState
-                                    })
-                                    return prevExpressionState
-                                }
-                            }
-                        )
+                        try {
+                            const result = Function('return ' + mathExpression)()
+                            const redundantPartOfResult = /[.]*0+$/
+
+                            setDisplayExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
+                            setMathExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
+                            if (historyExpression.length > 0) {
+                                return historyExpression[0].result.includes("Error") ?
+                                    setHistoryExpression([{
+                                        historyExpression: displayExpression,
+                                        result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                    }, ...historyExpression.slice(1)]) :
+                                    setHistoryExpression([{
+                                        historyExpression: displayExpression,
+                                        result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                                    }, ...historyExpression])
+                            } else return setHistoryExpression([{
+                                historyExpression: displayExpression,
+                                result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                            }, ...historyExpression])
+                        } catch (e) {
+                            if (historyExpression.length > 0) {
+                                return historyExpression[0].result.includes("Error") ?
+                                    setHistoryExpression([{
+                                        historyExpression: displayExpression,
+                                        result: "Expression Error"
+                                    }, ...historyExpression.slice(1)]) :
+                                    setHistoryExpression([{
+                                        historyExpression: displayExpression,
+                                        result: "Expression Error"
+                                    }, ...historyExpression])
+                            } else return setHistoryExpression([{
+                                historyExpression: displayExpression,
+                                result: "Expression Error"
+                            }, ...historyExpression])
+                        }
                     } else break
                 default:
                     break
