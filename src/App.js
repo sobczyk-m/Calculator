@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useEffect, useState} from "react"
 
 function App() {
 
@@ -57,18 +57,18 @@ function App() {
         }
     }
 
-    const onParenthesisClick = (target) => {
-        switch (target.id) {
+    const onParenthesisClick = (sign) => {
+        switch (sign) {
             case "(":
                 if (allNumbers.includes(lastDisplayChar)
                     || lastDisplayChar === "%"
                     || lastDisplayChar === ")"
                 ) {
-                    setMathExpression(mathExpression + parenthesis[target.id])
-                    setDisplayExpression(displayExpression + target.id)
+                    setMathExpression(mathExpression + parenthesis[sign])
+                    setDisplayExpression(displayExpression + sign)
                 } else {
-                    setMathExpression(mathExpression + target.id)
-                    setDisplayExpression(displayExpression + target.id)
+                    setMathExpression(mathExpression + sign)
+                    setDisplayExpression(displayExpression + sign)
                 }
                 break
             case ")":
@@ -76,8 +76,8 @@ function App() {
                     && lastDisplayChar !== "%") {
                     return null
                 } else {
-                    setMathExpression(mathExpression + target.id)
-                    setDisplayExpression(displayExpression + target.id)
+                    setMathExpression(mathExpression + sign)
+                    setDisplayExpression(displayExpression + sign)
                 }
                 break
             default:
@@ -180,8 +180,8 @@ function App() {
                 leftParenthesis.style.height = "100%"
                 rightParenthesis.style.height = "100%"
 
-                leftParenthesis.addEventListener("click", ev => onParenthesisClick(ev.currentTarget))
-                rightParenthesis.addEventListener("click", ev => onParenthesisClick(ev.currentTarget))
+                leftParenthesis.addEventListener("click", ev => onParenthesisClick(leftParenthesis.id))
+                rightParenthesis.addEventListener("click", ev => onParenthesisClick(rightParenthesis.id))
 
                 document.getElementById("parenthesis").innerText = ""
                 document.getElementById("parenthesis").append(leftParenthesis)
