@@ -227,6 +227,8 @@ function App() {
             default:
                 throw new Error("Unrecognized character, no action to perform")
         }
+        document.getElementById("parenthesis").style.backgroundColor = buttonStyle.default.backgroundColor
+        document.getElementById("parenthesis").style.border = `1px solid ${buttonStyle.default.backgroundColor}`
         document.getElementById("parenthesis").innerText = "( )"
     }
 
