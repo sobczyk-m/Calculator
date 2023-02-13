@@ -1,0 +1,8 @@
+$font-size-big: 1.5rem;
+$font-size-small: 1.2rem;
+
+@font-face {
+  font-family: "wwDigital";
+  src: local("wwDigital"),
+  url("/src/fonts/wwDigital.ttf") format("truetype");
+}
