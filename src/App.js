@@ -39,6 +39,18 @@ function App() {
     const lastDisplayChar = displayExpression[displayExpression.length - 1]
     const penultimateDisplayChar = displayExpression[displayExpression.length - 2]
 
+    const buttonStyle = {
+        operator: {backgroundColor: "#4f5d75"},
+        undo: {backgroundColor: "#a4161a"},
+        equals: {backgroundColor: "#cf9521"},
+        default: {backgroundColor: "#333533"}
+    }
+
+    const historyResultStyle = {
+        correct: {"color": "#ffa500"},
+        incorrect: {"color": "red"}
+    }
+
     const handleKeyDown = (e) => {
         console.log(e.key)
         switch (true) {
@@ -294,13 +306,6 @@ function App() {
 
     const createButton = () => {
 
-        const buttonStyle = {
-            operator: {backgroundColor: "#4f5d75"},
-            undo: {backgroundColor: "#a4161a"},
-            equals: {backgroundColor: "#cf9521"},
-            default: {backgroundColor: "#333533"}
-        }
-
         const setButtonStyle = (sign) => {
             switch (true) {
                 case Object.keys(allOperators).includes(sign):
@@ -319,16 +324,13 @@ function App() {
                                              onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
     }
 
-    const correctHistoryResultStyle = {"color": "#ffa500"}
-    const incorrectHistoryResultStyle = {"color": "red"}
-
     const createHistoryExpression = () => {
         return historyExpression.map(ele =>
             <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}>
                 <span>{ele.historyExpression}</span>
                 <span>{"="}</span>
                 <span style={ele.result.includes("Error") ?
-                    incorrectHistoryResultStyle : correctHistoryResultStyle}>{ele.result}</span>
+                    historyResultStyle.incorrect : historyResultStyle.correct}>{ele.result}</span>
             </div>)
     }
 
