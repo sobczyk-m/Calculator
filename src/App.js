@@ -6,6 +6,13 @@ function App() {
     const [displayExpression, setDisplayExpression] = useState("")
     const [historyExpression, setHistoryExpression] = useState([])
 
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    })
+
     const buttons = [
         {"name": "clear", "sign": "C"}, {"name": "delete", "sign": "del"}, {"name": "percent", "sign": "%"},
         {"name": "divide", "sign": "/"}, {"name": "seven", "sign": "7"}, {"name": "eight", "sign": "8"},
@@ -31,6 +38,38 @@ function App() {
 
     const lastDisplayChar = displayExpression[displayExpression.length - 1]
     const penultimateDisplayChar = displayExpression[displayExpression.length - 2]
+
+    const handleKeyDown = (e) => {
+        console.log(e.key)
+        switch (true) {
+            case buttons.some(value => value.sign === e.key && e.key !== "x" && e.key !== "C"):
+                onButtonClick(e.key)
+                break
+            case e.key === "Enter": {
+                onButtonClick("=")
+                break
+            }
+            case e.key === "*":
+                onOperatorClick("x")
+                break
+            case e.key === "Delete": {
+                onButtonClick("C")
+                break
+            }
+            case e.key === "Backspace": {
+                onButtonClick("del")
+                break
+            }
+            case e.key === "(":
+                onParenthesisClick("(")
+                break
+            case e.key === ")":
+                onParenthesisClick(")")
+                break
+            default:
+                break
+        }
+    }
 
     const onOperatorClick = (sign) => {
 
