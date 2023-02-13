@@ -61,18 +61,65 @@ function App() {
                 break
             }
             case e.key === "(":
-                onParenthesisClick("(")
+                onParenthesisPick("(")
                 break
             case e.key === ")":
-                onParenthesisClick(")")
+                onParenthesisPick(")")
                 break
             default:
                 break
         }
     }
 
-    const onOperatorClick = (sign) => {
+    const onNumberClick = (number) => {
+        if (lastDisplayChar === "%" || lastDisplayChar === ")") {
+            setMathExpression(mathExpression + "*" + number)
+            setDisplayExpression(displayExpression + number)
+        } else {
+            setMathExpression(mathExpression + number)
+            setDisplayExpression(displayExpression + number)
+        }
+    }
 
+    const onClearClick = () => {
+        if (mathExpression === "") {
+            setDisplayExpression("")
+            setMathExpression("")
+            setHistoryExpression([])
+        } else {
+            setMathExpression("")
+            setDisplayExpression("")
+        }
+    }
+
+    const onDeleteClick = () => {
+        switch (true) {
+            case Object.keys(allNumbers).includes(lastDisplayChar) &&
+            (displayExpression[displayExpression.length - 2] === ")" || penultimateDisplayChar === "%"):
+                setMathExpression(mathExpression.slice(0, mathExpression.length - 2))
+                setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                break
+            case Object.keys(parenthesis).includes(lastDisplayChar)
+            && (Object.keys(allNumbers).includes(penultimateDisplayChar)
+                || penultimateDisplayChar === "%"
+                || penultimateDisplayChar === ")") !== false:
+                setMathExpression(mathExpression.slice(0,
+                    mathExpression.length - parenthesis[lastDisplayChar].length))
+                setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                break
+            case Object.keys(allOperators).includes(lastDisplayChar) :
+                setMathExpression(mathExpression.slice(0,
+                    mathExpression.length - allOperators[lastDisplayChar].length))
+                setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                break
+            default:
+                setMathExpression(mathExpression.slice(0, mathExpression.length - 1))
+                setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
+                break
+        }
+    }
+
+    const onOperatorClick = (sign) => {
         const activeOperator = sign
         const inactiveOperators = {...allOperators}
         delete inactiveOperators[activeOperator]
@@ -96,7 +143,42 @@ function App() {
         }
     }
 
-    const onParenthesisClick = (sign) => {
+    const onDotClick = () => {
+        if (allNumbers.includes(lastDisplayChar)) {
+            setMathExpression(mathExpression + ".")
+            setDisplayExpression(displayExpression + ".")
+        } else return null
+    }
+
+    const onParenthesisClick = () => {
+        const leftParenthesis = document.createElement("button")
+        const rightParenthesis = document.createElement("button")
+
+        leftParenthesis.id = "("
+        leftParenthesis.innerText = "("
+
+        rightParenthesis.id = ")"
+        rightParenthesis.innerText = ")"
+
+        leftParenthesis.style.width = "50%"
+        rightParenthesis.style.width = "50%"
+        leftParenthesis.style.height = "100%"
+        rightParenthesis.style.height = "100%"
+
+        leftParenthesis.addEventListener("click", ev => onParenthesisPick(leftParenthesis.id))
+        rightParenthesis.addEventListener("click", ev => onParenthesisPick(rightParenthesis.id))
+
+        document.getElementById("parenthesis").innerText = ""
+        document.getElementById("parenthesis").append(leftParenthesis)
+        document.getElementById("parenthesis").append(rightParenthesis)
+
+        document.getElementById("parenthesis").onmouseleave =
+            () => {
+                document.getElementById("parenthesis").innerText = "( )"
+            }
+    }
+
+    const onParenthesisPick = (sign) => {
         switch (sign) {
             case "(":
                 if (allNumbers.includes(lastDisplayChar)
@@ -125,52 +207,52 @@ function App() {
         document.getElementById("parenthesis").innerText = "( )"
     }
 
-    const onDotClick = () => {
-        if (allNumbers.includes(lastDisplayChar)) {
-            console.log("X")
-            setMathExpression(mathExpression + ".")
-            setDisplayExpression(displayExpression + ".")
-        } else return null
+    const onEqualsClick = () => {
+        if (
+            Object.keys(allOperators).some(operator => displayExpression.includes(operator))
+            || Object.keys(parenthesis).some(operator => displayExpression.includes(operator))
+        ) {
+            try {
+                const result = Function('return ' + mathExpression)()
+                const redundantPartOfResult = /[.]*0+$/
+
+                setDisplayExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
+                setMathExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
+                if (historyExpression.length > 0) {
+                    return historyExpression[0].result.includes("Error") ?
+                        setHistoryExpression([{
+                            historyExpression: displayExpression,
+                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                        }, ...historyExpression.slice(1)]) :
+                        setHistoryExpression([{
+                            historyExpression: displayExpression,
+                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                        }, ...historyExpression])
+                } else return setHistoryExpression([{
+                    historyExpression: displayExpression,
+                    result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
+                }, ...historyExpression])
+            } catch (e) {
+                if (historyExpression.length > 0) {
+                    return historyExpression[0].result.includes("Error") ?
+                        setHistoryExpression([{
+                            historyExpression: displayExpression,
+                            result: "Expression Error"
+                        }, ...historyExpression.slice(1)]) :
+                        setHistoryExpression([{
+                            historyExpression: displayExpression,
+                            result: "Expression Error"
+                        }, ...historyExpression])
+                } else return setHistoryExpression([{
+                    historyExpression: displayExpression,
+                    result: "Expression Error"
+                }, ...historyExpression])
+            }
+        }
     }
 
-    const onButtonClick = (e) => {
-        switch (e) {
-            case "C":
-                if (mathExpression === "") {
-                    setDisplayExpression("")
-                    setMathExpression("")
-                    setHistoryExpression([])
-                } else {
-                    setMathExpression("")
-                    setDisplayExpression("")
-                }
-                break
-            case "del":
-                switch (true) {
-                    case Object.keys(allNumbers).includes(lastDisplayChar) &&
-                    (displayExpression[displayExpression.length - 2] === ")" || penultimateDisplayChar === "%"):
-                        setMathExpression(mathExpression.slice(0, mathExpression.length - 2))
-                        setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
-                        break
-                    case Object.keys(parenthesis).includes(lastDisplayChar)
-                    && (Object.keys(allNumbers).includes(penultimateDisplayChar)
-                        || penultimateDisplayChar === "%"
-                        || penultimateDisplayChar === ")") !== false:
-                        setMathExpression(mathExpression.slice(0,
-                            mathExpression.length - parenthesis[lastDisplayChar].length))
-                        setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
-                        break
-                    case Object.keys(allOperators).includes(lastDisplayChar) :
-                        setMathExpression(mathExpression.slice(0,
-                            mathExpression.length - allOperators[lastDisplayChar].length))
-                        setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
-                        break
-                    default:
-                        setMathExpression(mathExpression.slice(0, mathExpression.length - 1))
-                        setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
-                        break
-                }
-                break
+    const onButtonClick = (buttonSign) => {
+        switch (buttonSign) {
             case "0":
             case "1":
             case "2":
@@ -181,101 +263,30 @@ function App() {
             case "7":
             case "8":
             case "9":
-                if (lastDisplayChar === "%" || lastDisplayChar === ")") {
-                    setMathExpression(mathExpression + "*" + e)
-                    setDisplayExpression(displayExpression + e)
-                } else {
-                    setMathExpression(mathExpression + e)
-                    setDisplayExpression(displayExpression + e)
-                }
+                onNumberClick(buttonSign)
                 break
-            case "x":
-                onOperatorClick("x")
+            case "C":
+                onClearClick()
                 break
-            case "/":
-                onOperatorClick("/")
+            case "del":
+                onDeleteClick()
                 break
             case "%":
-                onOperatorClick("%")
-                break
-            case "+":
-                onOperatorClick("+")
-                break
+            case "/":
+            case "x":
             case "-":
-                onOperatorClick("-")
-                break
-            case "( )":
-                const leftParenthesis = document.createElement("button")
-                const rightParenthesis = document.createElement("button")
-
-                leftParenthesis.id = "("
-                leftParenthesis.innerText = "("
-
-                rightParenthesis.id = ")"
-                rightParenthesis.innerText = ")"
-
-                leftParenthesis.style.width = "50%"
-                rightParenthesis.style.width = "50%"
-                leftParenthesis.style.height = "100%"
-                rightParenthesis.style.height = "100%"
-
-                leftParenthesis.addEventListener("click", ev => onParenthesisClick(leftParenthesis.id))
-                rightParenthesis.addEventListener("click", ev => onParenthesisClick(rightParenthesis.id))
-
-                document.getElementById("parenthesis").innerText = ""
-                document.getElementById("parenthesis").append(leftParenthesis)
-                document.getElementById("parenthesis").append(rightParenthesis)
-
-                document.getElementById("parenthesis").onmouseleave =
-                    () => {
-                        document.getElementById("parenthesis").innerText = "( )"
-                    }
+            case "+":
+                onOperatorClick(buttonSign)
                 break
             case ".":
                 onDotClick()
                 break
+            case "( )":
+                onParenthesisClick()
+                break
             case "=":
-                if (
-                    Object.keys(allOperators).some(operator => displayExpression.includes(operator))
-                    || Object.keys(parenthesis).some(operator => displayExpression.includes(operator))
-                ) {
-                    try {
-                        const result = Function('return ' + mathExpression)()
-                        const redundantPartOfResult = /[.]*0+$/
-
-                        setDisplayExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
-                        setMathExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
-                        if (historyExpression.length > 0) {
-                            return historyExpression[0].result.includes("Error") ?
-                                setHistoryExpression([{
-                                    historyExpression: displayExpression,
-                                    result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                }, ...historyExpression.slice(1)]) :
-                                setHistoryExpression([{
-                                    historyExpression: displayExpression,
-                                    result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                                }, ...historyExpression])
-                        } else return setHistoryExpression([{
-                            historyExpression: displayExpression,
-                            result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
-                        }, ...historyExpression])
-                    } catch (e) {
-                        if (historyExpression.length > 0) {
-                            return historyExpression[0].result.includes("Error") ?
-                                setHistoryExpression([{
-                                    historyExpression: displayExpression,
-                                    result: "Expression Error"
-                                }, ...historyExpression.slice(1)]) :
-                                setHistoryExpression([{
-                                    historyExpression: displayExpression,
-                                    result: "Expression Error"
-                                }, ...historyExpression])
-                        } else return setHistoryExpression([{
-                            historyExpression: displayExpression,
-                            result: "Expression Error"
-                        }, ...historyExpression])
-                    }
-                } else break
+                onEqualsClick()
+                break
             default:
                 throw new Error("Unrecognized character, no action to perform")
         }
