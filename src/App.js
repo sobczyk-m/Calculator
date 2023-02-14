@@ -290,39 +290,26 @@ function App() {
     }
 
     const onButtonClick = (buttonSign) => {
-        switch (buttonSign) {
-            case "0":
-            case "1":
-            case "2":
-            case "3":
-            case "4":
-            case "5":
-            case "6":
-            case "7":
-            case "8":
-            case "9":
+        switch (true) {
+            case allNumbers.includes(buttonSign):
                 onNumberClick(buttonSign)
                 break
-            case "C":
-                onClearClick()
-                break
-            case "del":
-                onDeleteClick()
-                break
-            case "%":
-            case "/":
-            case "x":
-            case "-":
-            case "+":
+            case Object.keys(allOperators).includes(buttonSign):
                 onOperatorClick(buttonSign)
                 break
-            case ".":
+            case buttonSign === "C":
+                onClearClick()
+                break
+            case buttonSign === "del":
+                onDeleteClick()
+                break
+            case buttonSign === ".":
                 onDotClick()
                 break
-            case "( )":
+            case buttonSign === "( )":
                 onParenthesisClick()
                 break
-            case "=":
+            case buttonSign === "=":
                 onEqualsClick()
                 break
             default:
