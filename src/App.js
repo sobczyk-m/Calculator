@@ -5,6 +5,7 @@ function App() {
     const [mathExpression, setMathExpression] = useState("")
     const [displayExpression, setDisplayExpression] = useState("")
     const [historyExpression, setHistoryExpression] = useState([])
+    const [displayResult, setDisplayResult] = useState(false)
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown)
@@ -84,7 +85,11 @@ function App() {
     }
 
     const onNumberClick = (number) => {
-        if (lastDisplayChar === "%" || lastDisplayChar === ")") {
+        if (displayResult === true) {
+            setMathExpression(number)
+            setDisplayExpression(number)
+            setDisplayResult(false)
+        } else if (lastDisplayChar === "%" || lastDisplayChar === ")") {
             setMathExpression(mathExpression + "*" + number)
             setDisplayExpression(displayExpression + number)
         } else {
@@ -94,6 +99,7 @@ function App() {
     }
 
     const onClearClick = () => {
+        setDisplayResult(false)
         if (mathExpression === "") {
             setDisplayExpression("")
             setMathExpression("")
@@ -105,6 +111,7 @@ function App() {
     }
 
     const onDeleteClick = () => {
+        setDisplayResult(false)
         switch (true) {
             case Object.keys(allNumbers).includes(lastDisplayChar) &&
             (displayExpression[displayExpression.length - 2] === ")" || penultimateDisplayChar === "%"):
@@ -136,6 +143,7 @@ function App() {
         const inactiveOperators = {...allOperators}
         delete inactiveOperators[activeOperator]
 
+        setDisplayResult(false)
         if (activeOperator === "%") {
             if (allNumbers.includes(lastDisplayChar) || lastDisplayChar === ")") {
                 setMathExpression(mathExpression + allOperators[activeOperator])
@@ -156,6 +164,7 @@ function App() {
     }
 
     const onDotClick = () => {
+        setDisplayResult(false)
         if (allNumbers.includes(lastDisplayChar)) {
             setMathExpression(mathExpression + ".")
             setDisplayExpression(displayExpression + ".")
@@ -204,6 +213,7 @@ function App() {
     const onParenthesisPick = (sign) => {
         switch (sign) {
             case "(":
+                setDisplayResult(false)
                 if (allNumbers.includes(lastDisplayChar)
                     || lastDisplayChar === "%"
                     || lastDisplayChar === ")"
@@ -216,6 +226,7 @@ function App() {
                 }
                 break
             case ")":
+                setDisplayResult(false)
                 if (Object.keys(allOperators).includes(lastDisplayChar)
                     && lastDisplayChar !== "%") {
                     return null
@@ -243,6 +254,8 @@ function App() {
 
                 setDisplayExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
                 setMathExpression(result.toFixed(8).toString().replace(redundantPartOfResult, ""))
+                setDisplayResult(true)
+
                 if (historyExpression.length > 0) {
                     return historyExpression[0].result.includes("Error") ?
                         setHistoryExpression([{
