@@ -332,9 +332,9 @@ function App() {
             }
         }
 
-        return buttons.map(button => <button id={button.name} key={button.name} className={"button"}
+        return buttons.map(button => <div id={button.name} key={button.name} className={"button"}
                                              style={setButtonStyle(button.sign)}
-                                             onClick={() => onButtonClick(button.sign)}>{button.sign}</button>)
+                                             onClick={() => onButtonClick(button.sign)}>{button.sign}</div>)
     }
 
     const createHistoryExpression = () => {
