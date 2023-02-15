@@ -52,6 +52,7 @@
   border: 1px solid abs.$btn-color;
   border-radius: 10px;
   background-color: abs.$btn-color;
+  user-select: none;
 }
 
 #expressionContainer {
