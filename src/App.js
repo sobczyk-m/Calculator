@@ -176,7 +176,7 @@ function App() {
         const rightParenthesis = document.createElement("button")
 
         leftParenthesis.id = "("
-        leftParenthesis.innerText = "("
+        leftParenthesis.textContent = "("
         leftParenthesis.style.width = "50%"
         leftParenthesis.style.height = "100%"
         leftParenthesis.style.backgroundColor = buttonStyle.default.backgroundColor
@@ -185,7 +185,7 @@ function App() {
         leftParenthesis.style.borderRadius = `10px`
 
         rightParenthesis.id = ")"
-        rightParenthesis.innerText = ")"
+        rightParenthesis.textContent = ")"
         rightParenthesis.style.width = "50%"
         rightParenthesis.style.height = "100%"
         rightParenthesis.style.backgroundColor = buttonStyle.default.backgroundColor
@@ -227,8 +227,8 @@ function App() {
                 break
             case ")":
                 setDisplayResult(false)
-                if (Object.keys(allOperators).includes(lastDisplayChar)
-                    && lastDisplayChar !== "%") {
+                if ((Object.keys(allOperators).includes(lastDisplayChar)
+                    && lastDisplayChar !== "%") || displayExpression.length < 1) {
                     return null
                 } else {
                     setMathExpression(mathExpression + sign)
@@ -333,8 +333,8 @@ function App() {
         }
 
         return buttons.map(button => <div id={button.name} key={button.name} className={"button"}
-                                             style={setButtonStyle(button.sign)}
-                                             onClick={() => onButtonClick(button.sign)}>{button.sign}</div>)
+                                          style={setButtonStyle(button.sign)}
+                                          onClick={() => onButtonClick(button.sign)}>{button.sign}</div>)
     }
 
     const createHistoryExpression = () => {
@@ -351,7 +351,7 @@ function App() {
         <div id={"calculator"}>
             <div id={"display"}>
                 <div id={"historyExpressionContainer"}>{createHistoryExpression()}</div>
-                <div id={"expressionContainer"}><span>{displayExpression}</span></div>
+                <div id={"expressionContainer"} data-testid={"displayExpression"}><span>{displayExpression}</span></div>
             </div>
             <div id={"buttons-container"}>
                 {createButton()}
