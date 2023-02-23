@@ -48,4 +48,42 @@ describe("<App/>", () => {
             }
         )
     })
+
+    describe("lastIndex of displayExpression is operator", () => {
+        const reducedOperators = Object.keys(operators).filter(operator => operator !== "%")
+
+        it.each(reducedOperators)
+        ("button '%s' should replace lastIndex", async (activeOperator) => {
+            render(<App/>)
+            await userEvent.click(screen.getByText("1"))
+            for (let i = 0; i < reducedOperators.length; i++) {
+                await userEvent.click(screen.getByText(reducedOperators[i]))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + reducedOperators[i])
+                await userEvent.click(screen.getByText(activeOperator))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + activeOperator)
+            }
+        })
+
+        it("button '%' should not replace lastIndex", async () => {
+            render(<App/>)
+            await userEvent.click(screen.getByText("1"))
+            for (let i = 0; i < reducedOperators.length; i++) {
+                await userEvent.click(screen.getByText(reducedOperators[i]))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + reducedOperators[i])
+                await userEvent.click(screen.getByText("%"))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + reducedOperators[i])
+            }
+        })
+
+        it("button '.' should not replace lastIndex", async () => {
+            render(<App/>)
+            await userEvent.click(screen.getByText("1"))
+            for (let i = 0; i < reducedOperators.length; i++) {
+                await userEvent.click(screen.getByText(reducedOperators[i]))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + reducedOperators[i])
+                await userEvent.click(screen.getByText("."))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + reducedOperators[i])
+            }
+        })
+    })
 })
