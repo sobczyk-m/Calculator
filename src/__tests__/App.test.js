@@ -1,7 +1,7 @@
 import App from "../App"
 import {render, screen} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import {numbers, operators} from "../buttonsCollection"
+import {numbers, operators, parentheses} from "../buttonsCollection"
 
 describe("<App/>", () => {
     describe("displayExpression is empty string", () => {
@@ -84,6 +84,40 @@ describe("<App/>", () => {
                 await userEvent.click(screen.getByText("."))
                 expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + reducedOperators[i])
             }
+        })
+    })
+
+    describe("delete button", () => {
+        it.each(Object.keys(operators).concat("."))
+        ("should delete %s", async (sign) => {
+            render(<App/>)
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText(sign))
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + sign)
+            await userEvent.click(screen.getByText("del"))
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1")
+        })
+
+        it.each(numbers)
+        ("should delete %s", async (number) => {
+            render(<App/>)
+            await userEvent.click(screen.getByText(number))
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual(number)
+            await userEvent.click(screen.getByText("del"))
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+        })
+
+        it.each(Object.keys(parentheses))
+        ("should delete %s", async (parenthesis) => {
+            render(<App/>)
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText("( )"))
+            const parenthesisButton = await screen.findByText(parenthesis)
+            expect(parenthesisButton).toBeInTheDocument()
+            await userEvent.click(parenthesisButton)
+            await userEvent.click(screen.getByText("del"))
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1")
+
         })
     })
 })
