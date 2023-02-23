@@ -1,21 +1,13 @@
 import App from "../App"
 import {render, screen} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-
-const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-const allOperators = {
-    "x": "*",
-    "/": "/",
-    "%": "/100",
-    "+": "+",
-    "-": "-"
-}
+import {numbers, operators} from "../buttonsCollection"
 
 describe("<App/>", () => {
-
     describe("displayExpression is empty string", () => {
+
         describe("Buttons not able to change displayExpression", () => {
-                it.each(Object.keys(allOperators).filter(operator => operator !== "+" && operator !== "-").concat(["."]))
+                it.each(Object.keys(operators).filter(operator => operator !== "+" && operator !== "-").concat(["."]))
                 ("button '%s' should not change displayExpression", async (btnText) => {
                     render(<App/>)
                     expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
@@ -36,7 +28,7 @@ describe("<App/>", () => {
         )
 
         describe("Buttons able to change displayExpression", () => {
-                it.each(allNumbers.concat(["-", "+"]))
+                it.each(numbers.concat(["-", "+"]))
                 ("button '%s' should change displayExpression", async (btnText) => {
                     render(<App/>)
                     expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")

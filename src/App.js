@@ -1,4 +1,7 @@
 import {useEffect, useState} from "react"
+import Display from "./Display"
+import Buttons from "./Buttons"
+import {buttons, numbers, operators, parentheses} from "./buttonsCollection"
 
 function App() {
 
@@ -14,32 +17,6 @@ function App() {
         }
     })
 
-    const buttons = [
-        {"name": "clear", "sign": "C"}, {"name": "delete", "sign": "del"}, {"name": "percent", "sign": "%"},
-        {"name": "divide", "sign": "/"}, {"name": "seven", "sign": "7"}, {"name": "eight", "sign": "8"},
-        {"name": "nine", "sign": "9"}, {"name": "multiply", "sign": "x"}, {"name": "four", "sign": "4"},
-        {"name": "five", "sign": "5"}, {"name": "six", "sign": "6"}, {"name": "subtract", "sign": "-"},
-        {"name": "one", "sign": "1"}, {"name": "two", "sign": "2"}, {"name": "three", "sign": "3"},
-        {"name": "add", "sign": "+"}, {"name": "zero", "sign": "0"}, {"name": "decimal", "sign": "."},
-        {"name": "parenthesis", "sign": "( )"}, {"name": "equals", "sign": "="},
-    ]
-
-    const allNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    const allOperators = {
-        "x": "*",
-        "/": "/",
-        "%": "/100",
-        "+": "+",
-        "-": "-"
-    }
-    const parenthesis = {
-        "(": "*(",
-        ")": ")",
-    }
-
-    const lastDisplayChar = displayExpression[displayExpression.length - 1]
-    const penultimateDisplayChar = displayExpression[displayExpression.length - 2]
-
     const buttonStyle = {
         operator: {backgroundColor: "#4f5d75"},
         undo: {backgroundColor: "#a4161a"},
@@ -51,6 +28,9 @@ function App() {
         correct: {"color": "#ffa500"},
         incorrect: {"color": "red"}
     }
+
+    const lastDisplayChar = displayExpression[displayExpression.length - 1]
+    const penultimateDisplayChar = displayExpression[displayExpression.length - 2]
 
     const handleKeyDown = (e) => {
         console.log(e.key)
@@ -113,22 +93,22 @@ function App() {
     const onDeleteClick = () => {
         setDisplayResult(false)
         switch (true) {
-            case Object.keys(allNumbers).includes(lastDisplayChar) &&
+            case Object.keys(numbers).includes(lastDisplayChar) &&
             (displayExpression[displayExpression.length - 2] === ")" || penultimateDisplayChar === "%"):
                 setMathExpression(mathExpression.slice(0, mathExpression.length - 2))
                 setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
                 break
-            case Object.keys(parenthesis).includes(lastDisplayChar)
-            && (Object.keys(allNumbers).includes(penultimateDisplayChar)
+            case Object.keys(parentheses).includes(lastDisplayChar)
+            && (Object.keys(numbers).includes(penultimateDisplayChar)
                 || penultimateDisplayChar === "%"
                 || penultimateDisplayChar === ")") !== false:
                 setMathExpression(mathExpression.slice(0,
-                    mathExpression.length - parenthesis[lastDisplayChar].length))
+                    mathExpression.length - parentheses[lastDisplayChar].length))
                 setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
                 break
-            case Object.keys(allOperators).includes(lastDisplayChar) :
+            case Object.keys(operators).includes(lastDisplayChar) :
                 setMathExpression(mathExpression.slice(0,
-                    mathExpression.length - allOperators[lastDisplayChar].length))
+                    mathExpression.length - operators[lastDisplayChar].length))
                 setDisplayExpression(displayExpression.slice(0, displayExpression.length - 1))
                 break
             default:
@@ -140,13 +120,13 @@ function App() {
 
     const onOperatorClick = (sign) => {
         const activeOperator = sign
-        const inactiveOperators = {...allOperators}
+        const inactiveOperators = {...operators}
         delete inactiveOperators[activeOperator]
 
         setDisplayResult(false)
         if (activeOperator === "%") {
-            if (allNumbers.includes(lastDisplayChar) || lastDisplayChar === ")") {
-                setMathExpression(mathExpression + allOperators[activeOperator])
+            if (numbers.includes(lastDisplayChar) || lastDisplayChar === ")") {
+                setMathExpression(mathExpression + operators[activeOperator])
                 setDisplayExpression((displayExpression + activeOperator))
             } else return null
         } else if (lastDisplayChar === activeOperator ||
@@ -155,17 +135,17 @@ function App() {
             return null
         } else if (Object.keys(inactiveOperators).includes(lastDisplayChar)
             && lastDisplayChar !== "%") {
-            setMathExpression(mathExpression.slice(0, mathExpression.length - 1) + allOperators[activeOperator])
+            setMathExpression(mathExpression.slice(0, mathExpression.length - 1) + operators[activeOperator])
             setDisplayExpression((displayExpression.slice(0, displayExpression.length - 1) + activeOperator))
         } else {
-            setMathExpression(mathExpression + allOperators[activeOperator])
+            setMathExpression(mathExpression + operators[activeOperator])
             setDisplayExpression(displayExpression + activeOperator)
         }
     }
 
     const onDotClick = () => {
         setDisplayResult(false)
-        if (allNumbers.includes(lastDisplayChar)) {
+        if (numbers.includes(lastDisplayChar)) {
             setMathExpression(mathExpression + ".")
             setDisplayExpression(displayExpression + ".")
         } else return null
@@ -214,11 +194,11 @@ function App() {
         switch (sign) {
             case "(":
                 setDisplayResult(false)
-                if (allNumbers.includes(lastDisplayChar)
+                if (numbers.includes(lastDisplayChar)
                     || lastDisplayChar === "%"
                     || lastDisplayChar === ")"
                 ) {
-                    setMathExpression(mathExpression + parenthesis[sign])
+                    setMathExpression(mathExpression + parentheses[sign])
                     setDisplayExpression(displayExpression + sign)
                 } else {
                     setMathExpression(mathExpression + sign)
@@ -227,7 +207,7 @@ function App() {
                 break
             case ")":
                 setDisplayResult(false)
-                if ((Object.keys(allOperators).includes(lastDisplayChar)
+                if ((Object.keys(operators).includes(lastDisplayChar)
                     && lastDisplayChar !== "%") || displayExpression.length < 1) {
                     return null
                 } else {
@@ -245,8 +225,8 @@ function App() {
 
     const onEqualsClick = () => {
         if (
-            Object.keys(allOperators).some(operator => displayExpression.includes(operator))
-            || Object.keys(parenthesis).some(operator => displayExpression.includes(operator))
+            Object.keys(operators).some(operator => displayExpression.includes(operator))
+            || Object.keys(parentheses).some(operator => displayExpression.includes(operator))
         ) {
             try {
                 const result = Function('return ' + mathExpression)()
@@ -291,10 +271,10 @@ function App() {
 
     const onButtonClick = (buttonSign) => {
         switch (true) {
-            case allNumbers.includes(buttonSign):
+            case numbers.includes(buttonSign):
                 onNumberClick(buttonSign)
                 break
-            case Object.keys(allOperators).includes(buttonSign):
+            case Object.keys(operators).includes(buttonSign):
                 onOperatorClick(buttonSign)
                 break
             case buttonSign === "C":
@@ -317,24 +297,17 @@ function App() {
         }
     }
 
-    const createButton = () => {
-
-        const setButtonStyle = (sign) => {
-            switch (true) {
-                case Object.keys(allOperators).includes(sign):
-                    return buttonStyle.operator
-                case sign === "C" || sign === "del":
-                    return buttonStyle.undo
-                case sign === "=":
-                    return buttonStyle.equals
-                default:
-                    return buttonStyle.default
-            }
+    const setButtonStyle = (sign) => {
+        switch (true) {
+            case Object.keys(operators).includes(sign):
+                return buttonStyle.operator
+            case sign === "C" || sign === "del":
+                return buttonStyle.undo
+            case sign === "=":
+                return buttonStyle.equals
+            default:
+                return buttonStyle.default
         }
-
-        return buttons.map(button => <div id={button.name} key={button.name} className={"button"}
-                                          style={setButtonStyle(button.sign)}
-                                          onClick={() => onButtonClick(button.sign)}>{button.sign}</div>)
     }
 
     const createHistoryExpression = () => {
@@ -349,13 +322,8 @@ function App() {
 
     return (
         <div id={"calculator"}>
-            <div id={"display"}>
-                <div id={"historyExpressionContainer"}>{createHistoryExpression()}</div>
-                <div id={"expressionContainer"} data-testid={"displayExpression"}><span>{displayExpression}</span></div>
-            </div>
-            <div id={"buttons-container"}>
-                {createButton()}
-            </div>
+            <Display historyExpression={createHistoryExpression()} displayExpression={displayExpression}/>
+            <Buttons buttons={buttons} buttonStyle={setButtonStyle} onButtonClick={onButtonClick}/>
         </div>
     )
 }
