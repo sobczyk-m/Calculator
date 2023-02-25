@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import {useCallback, useEffect, useState} from "react"
 import Display from "./Display"
 import Buttons from "./Buttons"
 import {buttons, numbers, operators, parentheses} from "./buttonsCollection"
@@ -310,7 +310,7 @@ function App() {
         }
     }
 
-    const createHistoryExpression = () => {
+    const createHistoryExpression = useCallback(() => {
         return historyExpression.map(ele =>
             <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}
                  data-testid={ele.historyExpression}>
@@ -319,7 +319,7 @@ function App() {
                 <span style={ele.result.includes("Error") ?
                     historyResultStyle.incorrect : historyResultStyle.correct}>{ele.result}</span>
             </div>)
-    }
+    }, [historyExpression])
 
     return (
         <div id={"calculator"}>
