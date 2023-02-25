@@ -120,4 +120,52 @@ describe("<App/>", () => {
 
         })
     })
+
+    describe("clear button", () => {
+        describe("displayExpression", () => {
+            it('should be empty String after one click', async () => {
+                render(<App/>)
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+
+                await userEvent.click(screen.getByText("1"))
+                await userEvent.click(screen.getByText("x"))
+                await userEvent.click(screen.getByText("4"))
+                await userEvent.click(screen.getByText("."))
+                await userEvent.click(screen.getByText("5"))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1x4.5")
+
+                await userEvent.click(screen.getByText("C"))
+                expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            })
+        })
+
+        describe("historyExpressionContainer", () => {
+            it('should be empty String after double click', async () => {
+                render(<App/>)
+                expect(screen.getByTestId("historyExpressionContainer").textContent).toStrictEqual("")
+
+                await userEvent.click(screen.getByText("1"))
+                await userEvent.click(screen.getByText("x"))
+                await userEvent.click(screen.getByText("4"))
+                await userEvent.click(screen.getByText("=", {selector: "div"}))
+
+                expect(screen.getByTestId("historyExpressionContainer").textContent).not.toStrictEqual("")
+
+                await userEvent.click(screen.getByText("3"))
+                await userEvent.click(screen.getByText("x"))
+                await userEvent.click(screen.getByText("1"))
+                await userEvent.click(screen.getByText("=", {selector: "div"}))
+
+                expect(screen.getByTestId("1x4")).toBeInTheDocument()
+                expect(screen.getByTestId("3x1")).toBeInTheDocument()
+
+                await userEvent.click(screen.getByText("C"))
+                await userEvent.click(screen.getByText("C"))
+
+                expect(screen.queryByTestId("3x1")).not.toBeInTheDocument()
+                expect(screen.queryByTestId("1x4")).not.toBeInTheDocument()
+                expect(screen.getByTestId("historyExpressionContainer").textContent).toStrictEqual("")
+            })
+        })
+    })
 })

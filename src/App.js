@@ -312,7 +312,8 @@ function App() {
 
     const createHistoryExpression = () => {
         return historyExpression.map(ele =>
-            <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}>
+            <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}
+                 data-testid={ele.historyExpression}>
                 <span>{ele.historyExpression}</span>
                 <span>{"="}</span>
                 <span style={ele.result.includes("Error") ?
