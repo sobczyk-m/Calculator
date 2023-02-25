@@ -3,6 +3,31 @@ import Display from "./Display"
 import Buttons from "./Buttons"
 import {buttons, numbers, operators, parentheses} from "./buttonsCollection"
 
+const buttonStyle = {
+    operator: {backgroundColor: "#4f5d75"},
+    undo: {backgroundColor: "#a4161a"},
+    equals: {backgroundColor: "#cf9521"},
+    default: {backgroundColor: "#333533"}
+}
+
+const historyResultStyle = {
+    correct: {"color": "#ffa500"},
+    incorrect: {"color": "red"}
+}
+
+const setButtonStyle = (sign) => {
+    switch (true) {
+        case Object.keys(operators).includes(sign):
+            return buttonStyle.operator
+        case sign === "C" || sign === "del":
+            return buttonStyle.undo
+        case sign === "=":
+            return buttonStyle.equals
+        default:
+            return buttonStyle.default
+    }
+}
+
 function App() {
 
     const [mathExpression, setMathExpression] = useState("")
@@ -16,18 +41,6 @@ function App() {
             window.removeEventListener('keydown', handleKeyDown)
         }
     })
-
-    const buttonStyle = {
-        operator: {backgroundColor: "#4f5d75"},
-        undo: {backgroundColor: "#a4161a"},
-        equals: {backgroundColor: "#cf9521"},
-        default: {backgroundColor: "#333533"}
-    }
-
-    const historyResultStyle = {
-        correct: {"color": "#ffa500"},
-        incorrect: {"color": "red"}
-    }
 
     const lastDisplayChar = displayExpression[displayExpression.length - 1]
     const penultimateDisplayChar = displayExpression[displayExpression.length - 2]
@@ -294,19 +307,6 @@ function App() {
                 break
             default:
                 throw new Error("Unrecognized character, no action to perform")
-        }
-    }
-
-    const setButtonStyle = (sign) => {
-        switch (true) {
-            case Object.keys(operators).includes(sign):
-                return buttonStyle.operator
-            case sign === "C" || sign === "del":
-                return buttonStyle.undo
-            case sign === "=":
-                return buttonStyle.equals
-            default:
-                return buttonStyle.default
         }
     }
 
