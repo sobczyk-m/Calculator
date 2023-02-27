@@ -233,7 +233,7 @@ function App() {
         }
         document.getElementById("parenthesis").style.backgroundColor = buttonStyle.default.backgroundColor
         document.getElementById("parenthesis").style.border = `1px solid ${buttonStyle.default.backgroundColor}`
-        document.getElementById("parenthesis").innerText = "( )"
+        document.getElementById("parenthesis").innerHTML = "( )"
     }
 
     const onEqualsClick = () => {
@@ -311,12 +311,11 @@ function App() {
     }
 
     const createHistoryExpression = useCallback(() => {
-        return historyExpression.map(ele =>
-            <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}
-                 data-testid={ele.historyExpression}>
-                <span>{ele.historyExpression}</span>
+        return historyExpression.map((ele, index) =>
+            <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}>
+                <span data-testid={"historyExpression #" + index}>{ele.historyExpression}</span>
                 <span>{"="}</span>
-                <span style={ele.result.includes("Error") ?
+                <span data-testid={"result #" + index} style={ele.result.includes("Error") ?
                     historyResultStyle.incorrect : historyResultStyle.correct}>{ele.result}</span>
             </div>)
     }, [historyExpression])
