@@ -203,6 +203,76 @@ describe("<App/>", () => {
             expect(screen.getByTestId("historyExpression #0")).toBeInTheDocument()
             expect(screen.getByTestId("result #0")).toBeInTheDocument()
             expect(screen.getByTestId("result #0").textContent).toStrictEqual(result)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual(result)
+        })
+    })
+
+    describe("handling keyboard buttons pressing", () => {
+
+        it.each(numbers)
+        ("pressing '%s' should behave like clicking equivalent calculator button", async function (key) {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            await userEvent.keyboard(key)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual(key)
+        })
+
+        it.each([...Object.keys(parentheses), ...Object.keys(operators).filter(operator => operator !== "x")])
+        ("pressing '%s' should behave like clicking equivalent calculator button", async function (key) {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.keyboard(key)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1" + key)
+        })
+
+        it("pressing '*' should behave like clicking equivalent calculator button", async function () {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.keyboard("*")
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("1x")
+        })
+
+        it("pressing 'Enter' should behave like clicking equivalent calculator button", async function () {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText("+"))
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.keyboard("[Enter]")
+            expect(screen.getByTestId("historyExpression #0").textContent).toStrictEqual("1+1")
+            expect(screen.getByTestId("result #0").textContent).toStrictEqual("2")
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("2")
+        })
+
+        it("pressing 'Backspace' should behave like clicking equivalent calculator button", async function () {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.keyboard("[Backspace]")
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+        })
+
+        it("pressing 'Delete' should behave like clicking equivalent calculator button", async function () {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText("+"))
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText("=", {selector: "div"}))
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("2")
+            expect(screen.getByTestId("historyExpression #0")).toBeInTheDocument()
+            expect(screen.getByTestId("result #0")).toBeInTheDocument()
+
+            await userEvent.keyboard("[Delete]")
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            expect(screen.getByTestId("historyExpression #0")).toBeInTheDocument()
+            expect(screen.getByTestId("result #0")).toBeInTheDocument()
+
+            await userEvent.keyboard("[Delete]")
+            expect(screen.queryByTestId("historyExpression #0")).not.toBeInTheDocument()
+            expect(screen.queryByTestId("result #0")).not.toBeInTheDocument()
         })
     })
 })
