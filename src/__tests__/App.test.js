@@ -205,6 +205,29 @@ describe("<App/>", () => {
             expect(screen.getByTestId("result #0").textContent).toStrictEqual(result)
             expect(screen.getByTestId("displayExpression").textContent).toStrictEqual(result)
         })
+
+        it("should display 'Expression Error' when calculating incorrect formula", async () => {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            expect(screen.queryByTestId("historyExpression #0")).not.toBeInTheDocument()
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText("/"))
+            await userEvent.click(screen.getByText("=", {selector: "div"}))
+            expect(screen.queryByTestId("displayExpression").textContent).toStrictEqual("1/")
+            expect(screen.queryByTestId("historyExpression #0").textContent).toStrictEqual("1/")
+            expect(screen.queryByTestId("result #0").textContent).toStrictEqual("Expression Error")
+        })
+
+        it("should not run when only numbers in formula", async () => {
+            render(<App/>)
+            expect(screen.getByTestId("displayExpression").textContent).toStrictEqual("")
+            expect(screen.queryByTestId("historyExpression #0")).not.toBeInTheDocument()
+            await userEvent.click(screen.getByText("1"))
+            await userEvent.click(screen.getByText("=", {selector: "div"}))
+            expect(screen.queryByTestId("displayExpression").textContent).toStrictEqual("1")
+            expect(screen.queryByTestId("historyExpression #0")).not.toBeInTheDocument()
+            expect(screen.queryByTestId("result #0")).not.toBeInTheDocument()
+        })
     })
 
     describe("handling keyboard buttons pressing", () => {
