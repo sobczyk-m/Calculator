@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react"
 import Display from "./Display"
 import Buttons from "./Buttons"
-import {buttons, numbers, operators, parentheses} from "./buttonsCollection"
+import {buttons, numbers, operators, parentheses} from "../buttonsCollection"
 
 const buttonStyle = {
     operator: {backgroundColor: "#4f5d75"},
