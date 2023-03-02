@@ -1,4 +1,4 @@
-import buttonStyle from "../buttonStyle"
+import buttonStyle from "../data/buttonStyle"
 import handleParenthesisPick from "./handleParenthesisPick"
 
 const handleParenthesisClick = (lastDisplayChar, displayExpression, setDisplayExpression,

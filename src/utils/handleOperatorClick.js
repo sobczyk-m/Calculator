@@ -1,4 +1,4 @@
-import {numbers, operators} from "../buttonsCollection"
+import {numbers, operators} from "../data/buttonsCollection"
 
 const handleOperatorClick = (sign, lastDisplayChar, displayExpression, setDisplayExpression, mathExpression, setMathExpression,
                              displayResult, setDisplayResult) => {

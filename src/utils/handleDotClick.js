@@ -1,4 +1,4 @@
-import {numbers} from "../buttonsCollection"
+import {numbers} from "../data/buttonsCollection"
 
 const handleDotClick = (lastDisplayChar, displayExpression, setDisplayExpression, mathExpression, setMathExpression,
                         setDisplayResult) => {

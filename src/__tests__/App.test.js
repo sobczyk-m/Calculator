@@ -1,7 +1,7 @@
 import App from "../components/App"
 import {render, screen} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import {numbers, operators, parentheses} from "../buttonsCollection"
+import {numbers, operators, parentheses} from "../data/buttonsCollection"
 
 describe("<App/>", () => {
     describe("displayExpression is empty string", () => {

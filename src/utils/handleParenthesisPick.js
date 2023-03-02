@@ -1,5 +1,5 @@
-import {numbers, operators, parentheses} from "../buttonsCollection"
-import buttonStyle from "../buttonStyle"
+import {numbers, operators, parentheses} from "../data/buttonsCollection"
+import buttonStyle from "../data/buttonStyle"
 
 const handleParenthesisPick = (sign, lastDisplayChar, displayExpression, setDisplayExpression, mathExpression,
                                setMathExpression, setDisplayResult) => {

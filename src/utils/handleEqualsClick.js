@@ -1,4 +1,4 @@
-import {operators, parentheses} from "../buttonsCollection"
+import {operators, parentheses} from "../data/buttonsCollection"
 
 const handleEqualsClick = (displayExpression, setDisplayExpression, mathExpression,
                            setMathExpression, historyExpression, setHistoryExpression, setDisplayResult) => {

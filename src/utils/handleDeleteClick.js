@@ -1,4 +1,4 @@
-import {numbers, operators, parentheses} from "../buttonsCollection"
+import {numbers, operators, parentheses} from "../data/buttonsCollection"
 
 const handleDeleteClick = (penultimateDisplayChar, lastDisplayChar, displayExpression, setDisplayExpression,
                            mathExpression, setMathExpression, setDisplayResult) => {
