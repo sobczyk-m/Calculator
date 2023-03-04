@@ -1,0 +1,19 @@
+@use "../abstracts/colors";
+@use "../abstracts/mixins";
+
+#buttons-container {
+  width: 100%;
+  height: 60%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.button {
+  @include mixins.flex-center;
+  border: 1px solid colors.$btn-color;
+  border-radius: 10px;
+  background-color: colors.$btn-color;
+  user-select: none;
+}

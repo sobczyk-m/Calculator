@@ -1,5 +1,5 @@
 @use "abstracts/index" as abs;
-@use "components";
+@use "components/index";
 
 * {
   box-sizing: border-box;
@@ -29,21 +29,4 @@
   gap: 15px;
   border: 5px solid black;
   background-color: abs.$calc-bg-color;
-}
-
-#buttons-container {
-  width: 100%;
-  height: 60%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  gap: 5px;
-}
-
-.button {
-  @include abs.flex-center;
-  border: 1px solid abs.$btn-color;
-  border-radius: 10px;
-  background-color: abs.$btn-color;
-  user-select: none;
 }
