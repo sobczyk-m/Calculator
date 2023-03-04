@@ -41,18 +41,18 @@ function App() {
                 handleButtonClick(e.key)
                 break
             case e.key === "Enter": {
-                handleButtonClick("=")
+                handleEqualsClick()
                 break
             }
             case e.key === "*":
                 handleOperatorClick("x")
                 break
             case e.key === "Delete": {
-                handleButtonClick("C")
+                handleClearClick()
                 break
             }
             case e.key === "Backspace": {
-                handleButtonClick("del")
+                handleDeleteClick()
                 break
             }
             case e.key === "(":
