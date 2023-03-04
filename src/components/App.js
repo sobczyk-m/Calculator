@@ -1,13 +1,8 @@
-import {useCallback, useEffect, useState} from "react"
+import { useEffect, useState} from "react"
 import Display from "./Display"
 import Buttons from "./Buttons"
 import {buttons, numbers, operators, parentheses} from "../data/buttonsCollection"
 import buttonStyle from "../data/buttonStyle"
-
-const historyResultStyle = {
-    correct: {"color": "#ffa500"},
-    incorrect: {"color": "red"}
-}
 
 const setButtonStyle = (sign) => {
     switch (true) {
@@ -282,30 +277,30 @@ function App() {
                 if (historyExpression.length > 0) {
                     return historyExpression[0].result.includes("Error") ?
                         setHistoryExpression([{
-                            historyExpression: displayExpression,
+                            expression: displayExpression,
                             result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
                         }, ...historyExpression.slice(1)]) :
                         setHistoryExpression([{
-                            historyExpression: displayExpression,
+                            expression: displayExpression,
                             result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
                         }, ...historyExpression])
                 } else return setHistoryExpression([{
-                    historyExpression: displayExpression,
+                    expression: displayExpression,
                     result: result.toFixed(8).toString().replace(redundantPartOfResult, "")
                 }, ...historyExpression])
             } catch (e) {
                 if (historyExpression.length > 0) {
                     return historyExpression[0].result.includes("Error") ?
                         setHistoryExpression([{
-                            historyExpression: displayExpression,
+                            expression: displayExpression,
                             result: "Expression Error"
                         }, ...historyExpression.slice(1)]) :
                         setHistoryExpression([{
-                            historyExpression: displayExpression,
+                            expression: displayExpression,
                             result: "Expression Error"
                         }, ...historyExpression])
                 } else return setHistoryExpression([{
-                    historyExpression: displayExpression,
+                    expression: displayExpression,
                     result: "Expression Error"
                 }, ...historyExpression])
             }
@@ -340,19 +335,9 @@ function App() {
         }
     }
 
-    const createHistoryExpression = useCallback(() => {
-        return historyExpression.map((ele, index) =>
-            <div className={"historyCalculationWrapper"} key={historyExpression.indexOf(ele)}>
-                <span data-testid={"historyExpression #" + index}>{ele.historyExpression}</span>
-                <span>{"="}</span>
-                <span data-testid={"result #" + index} style={ele.result.includes("Error") ?
-                    historyResultStyle.incorrect : historyResultStyle.correct}>{ele.result}</span>
-            </div>)
-    }, [historyExpression])
-
     return (
         <div id={"calculator"}>
-            <Display historyExpression={createHistoryExpression()} displayExpression={displayExpression}/>
+            <Display historyExpression={historyExpression} displayExpression={displayExpression}/>
             <Buttons buttons={buttons} buttonStyle={setButtonStyle} onButtonClick={onButtonClick}/>
         </div>
     )
