@@ -65,20 +65,6 @@
   user-select: none;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-#root {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #e5e6e4;
-}
-
 #calculator {
   height: 550px;
   width: 350px;
@@ -94,6 +80,20 @@
   font-size: 1.5rem;
   color: #e7ecef;
   letter-spacing: 1px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e5e6e4;
 }
 
 /*# sourceMappingURL=style.css.map */

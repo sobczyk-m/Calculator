@@ -1,4 +1,4 @@
-@use "abstracts/index" as abs;
+@use "abstracts/mixins";
 @use "components/index";
 
 * {
@@ -9,24 +9,6 @@
 
 #root {
   height: 100vh;
-  @include abs.flex-center;
+  @include mixins.flex-center;
   background-color: #e5e6e4;
-}
-
-#calculator {
-  * {
-    font-family: wwDigital, sans-serif;
-    font-size: abs.$font-size-big;
-    color: abs.$text-color;
-    letter-spacing: 1px;
-  }
-
-  height: 550px;
-  width: 350px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  border: 5px solid black;
-  background-color: abs.$calc-bg-color;
 }
