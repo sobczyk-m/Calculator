@@ -38,35 +38,35 @@ function App() {
         console.log(e.key)
         switch (true) {
             case buttons.some(value => value.sign === e.key && e.key !== "x" && e.key !== "C"):
-                onButtonClick(e.key)
+                handleButtonClick(e.key)
                 break
             case e.key === "Enter": {
-                onButtonClick("=")
+                handleButtonClick("=")
                 break
             }
             case e.key === "*":
-                onOperatorClick("x")
+                handleOperatorClick("x")
                 break
             case e.key === "Delete": {
-                onButtonClick("C")
+                handleButtonClick("C")
                 break
             }
             case e.key === "Backspace": {
-                onButtonClick("del")
+                handleButtonClick("del")
                 break
             }
             case e.key === "(":
-                onParenthesisPick("(")
+                handleParenthesisPick("(")
                 break
             case e.key === ")":
-                onParenthesisPick(")")
+                handleParenthesisPick(")")
                 break
             default:
                 break
         }
     }
 
-    const onNumberClick = (number) => {
+    const handleNumberClick = (number) => {
         if (displayResult === true) {
             setMathExpression(number)
             setDisplayExpression(number)
@@ -80,7 +80,7 @@ function App() {
         }
     }
 
-    const onClearClick = () => {
+    const handleClearClick = () => {
         setDisplayResult(false)
         if (mathExpression === "") {
             setDisplayExpression("")
@@ -92,7 +92,7 @@ function App() {
         }
     }
 
-    const onDeleteClick = () => {
+    const handleDeleteClick = () => {
         setDisplayResult(false)
         switch (true) {
             case Object.keys(numbers).includes(lastDisplayChar) &&
@@ -120,7 +120,7 @@ function App() {
         }
     }
 
-    const onOperatorClick = (sign) => {
+    const handleOperatorClick = (sign) => {
         const activeOperator = sign
         const inactiveOperators = {...operators}
         delete inactiveOperators[activeOperator]
@@ -181,7 +181,7 @@ function App() {
         }
     }
 
-    const onDotClick = () => {
+    const handleDotClick = () => {
         setDisplayResult(false)
         if (numbers.includes(lastDisplayChar)) {
             setMathExpression(mathExpression + ".")
@@ -189,7 +189,7 @@ function App() {
         } else return null
     }
 
-    const onParenthesisClick = () => {
+    const handleParenthesisClick = () => {
         const leftParenthesis = document.createElement("button")
         const rightParenthesis = document.createElement("button")
 
@@ -211,8 +211,8 @@ function App() {
         rightParenthesis.style.borderLeft = `1px solid #adb5bd`
         rightParenthesis.style.borderRadius = `10px`
 
-        leftParenthesis.addEventListener("click", ev => onParenthesisPick(leftParenthesis.id))
-        rightParenthesis.addEventListener("click", ev => onParenthesisPick(rightParenthesis.id))
+        leftParenthesis.addEventListener("click", ev => handleParenthesisPick(leftParenthesis.id))
+        rightParenthesis.addEventListener("click", ev => handleParenthesisPick(rightParenthesis.id))
         document.getElementById("parenthesis").innerText = ""
 
         document.getElementById("parenthesis").style.backgroundColor = "#adb5bd"
@@ -228,7 +228,7 @@ function App() {
             }
     }
 
-    const onParenthesisPick = (sign) => {
+    const handleParenthesisPick = (sign) => {
         switch (sign) {
             case "(":
                 setDisplayResult(false)
@@ -261,7 +261,7 @@ function App() {
         document.getElementById("parenthesis").innerHTML = "( )"
     }
 
-    const onEqualsClick = () => {
+    const handleEqualsClick = () => {
         if (
             Object.keys(operators).some(operator => displayExpression.includes(operator))
             || Object.keys(parentheses).some(operator => displayExpression.includes(operator))
@@ -307,28 +307,28 @@ function App() {
         }
     }
 
-    const onButtonClick = (buttonSign) => {
+    const handleButtonClick = (buttonSign) => {
         switch (true) {
             case numbers.includes(buttonSign):
-                onNumberClick(buttonSign)
+                handleNumberClick(buttonSign)
                 break
             case Object.keys(operators).includes(buttonSign):
-                onOperatorClick(buttonSign)
+                handleOperatorClick(buttonSign)
                 break
             case buttonSign === "C":
-                onClearClick()
+                handleClearClick()
                 break
             case buttonSign === "del":
-                onDeleteClick()
+                handleDeleteClick()
                 break
             case buttonSign === ".":
-                onDotClick()
+                handleDotClick()
                 break
             case buttonSign === "( )":
-                onParenthesisClick()
+                handleParenthesisClick()
                 break
             case buttonSign === "=":
-                onEqualsClick()
+                handleEqualsClick()
                 break
             default:
                 throw new Error("Unrecognized character, no action to perform")
@@ -338,7 +338,7 @@ function App() {
     return (
         <div id={"calculator"}>
             <Display historyExpression={historyExpression} displayExpression={displayExpression}/>
-            <Buttons buttons={buttons} buttonStyle={setButtonStyle} onButtonClick={onButtonClick}/>
+            <Buttons buttons={buttons} buttonStyle={setButtonStyle} onButtonClick={handleButtonClick}/>
         </div>
     )
 }
